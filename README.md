@@ -49,6 +49,10 @@ What it unlocks with Steamworks/partner data:
 - Decision memo: `reports/decision_memo.md`
 - Public playbook table: `reports/playbook_table_public.csv`
 
+## Publish gate
+Before publishing: run `scripts/publish_audit.ps1`.
+
+
 ## Outputs
 - `data/processed/panel_daily.parquet`
 - `data/processed/sales.parquet`
