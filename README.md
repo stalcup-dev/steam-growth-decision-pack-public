@@ -1,4 +1,4 @@
-# Steam Promo ROI Decision Pack
+﻿# Steam Promo ROI Decision Pack
 
 Notebook-first pipeline that turns Steam discount histories into a decision pack: Public v1 shows engagement lift, and the Client upgrade adds revenue inputs to quantify net ROI.
 Use this repo to validate lift patterns now, then plug in Steamworks/partner data to move from "what happened" to "what it earned."

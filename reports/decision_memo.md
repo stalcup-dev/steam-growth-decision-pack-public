@@ -1,4 +1,4 @@
-# Decision Memo (Engagement Lift -> Revenue ROI)
+﻿# Decision Memo (Engagement Lift -> Revenue ROI)
 
 ## Objective
 Summarize sale strategy options using public engagement signals, while clearly gating all ROI claims on partner revenue data.

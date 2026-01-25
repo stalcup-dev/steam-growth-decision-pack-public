@@ -1,4 +1,4 @@
-# Steam Promo ROI Client Preview (One-Pager)
+﻿# Steam Promo ROI Client Preview (One-Pager)
 
 **What this is:** A decision-ready preview using public Steam data (engagement lift) with a clear path to net revenue ROI once Steamworks exports are provided.
 
