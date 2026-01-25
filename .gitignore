@@ -10,10 +10,10 @@ venv/
 
 # Processed artifacts
 /data/processed/*.parquet
-/reports/figures/*.png
 /reports/playbook_table.csv
 /reports/data_profile.md
 
 # OS
 Thumbs.db
 .DS_Store
+
