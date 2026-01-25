@@ -1,19 +1,28 @@
+# Public repo: figures are intended to be tracked.
+
+# Local caches
 __pycache__/
 .ipynb_checkpoints/
 .pytest_cache/
+
+# Environment
 .env/
 .venv/
 venv/
 
 # Raw data
-/data/raw/**
+data/raw/
 
 # Processed artifacts
-/data/processed/*.parquet
-/reports/playbook_table.csv
-/reports/data_profile.md
+data/processed/
+*.parquet
+*.zip
+
+# Public repo only: block pipeline code and notebooks
+src/
+notebooks/
+tests/
 
 # OS
 Thumbs.db
 .DS_Store
-
