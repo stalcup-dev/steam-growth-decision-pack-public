@@ -56,12 +56,12 @@ What it unlocks with Steamworks/partner data:
 - `reports/figures/` (PNG charts)
 - `reports/playbook_table.csv`
 - `reports/decision_memo.md` (template)
-- `reports/data_profile.md` (auto-generated from the raw scan)
 
 ## Notes
 - The pipeline infers column mappings and logs them in the data profile report.
 - Discount values are standardized to 0?100 percent.
 - Sales detection requires price/discount data. If price data is missing, sale detection fails with a clear error.
+Implementation code is maintained privately; this repo is the client-preview decision pack.
 
 ## Tests
 Run unit tests with:
