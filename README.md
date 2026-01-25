@@ -47,14 +47,14 @@ What it unlocks with Steamworks/partner data:
 ## Next steps
 - Data request: `docs/DATA_REQUEST_CLIENT.md`
 - Decision memo: `reports/decision_memo.md`
-- Stable playbook table: `reports/playbook_table_stable.csv`
+- Public playbook table: `reports/playbook_table_public.csv`
 
 ## Outputs
 - `data/processed/panel_daily.parquet`
 - `data/processed/sales.parquet`
 - `data/processed/event_window.parquet`
 - `reports/figures/` (PNG charts)
-- `reports/playbook_table.csv`
+- `reports/playbook_table_public.csv`
 - `reports/decision_memo.md` (template)
 
 ## Notes
