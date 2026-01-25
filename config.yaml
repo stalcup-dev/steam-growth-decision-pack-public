@@ -1,0 +1,16 @@
+tz: "UTC"
+daily_player_metric: "players_avg"
+event_window_pre_days: 14
+event_window_post_days: 14
+baseline_pre_days: 14
+baseline_exclude_days: 1
+peak_window_days: 7
+decay_window_days: 14
+decay_tolerance: 0.05
+decay_roll_days: 3
+discount_tiers: [0.10, 0.25, 0.50, 0.75, 0.90]
+popularity_quantiles: 4
+cadence_lookback_days: 90
+wishlist_notify_discount_pct: 20
+dev_mode: true
+max_app_files: 25

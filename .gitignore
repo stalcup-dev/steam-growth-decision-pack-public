@@ -1,0 +1,19 @@
+__pycache__/
+.ipynb_checkpoints/
+.pytest_cache/
+.env/
+.venv/
+venv/
+
+# Raw data
+/data/raw/**
+
+# Processed artifacts
+/data/processed/*.parquet
+/reports/figures/*.png
+/reports/playbook_table.csv
+/reports/data_profile.md
+
+# OS
+Thumbs.db
+.DS_Store

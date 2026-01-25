@@ -1,0 +1,20 @@
+# Ingestion Audit
+- Raw dir: C:\Users\halol\Desktop\steam-discount-impact\data\raw\mendeley
+- Attempted: 3512
+- Success: 3512
+- Failed: 0
+
+## Category Summary
+- player_files_part1: total=1000 attempted=1000 success=1000 failed=0
+- player_files_part2: total=1000 attempted=1000 success=1000 failed=0
+- price_files: total=1512 attempted=1512 success=1512 failed=0
+- metadata_files: total=7 attempted=0 success=0 failed=0
+
+## Inferred app_id from filename
+- player_files_part1: 1000
+- player_files_part2: 1000
+- price_files: 1512
+- metadata_files: 0
+
+## Failure examples (top 20)
+- None
