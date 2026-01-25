@@ -57,7 +57,7 @@ Before publishing: run `scripts/publish_audit.ps1`.
 - `data/processed/panel_daily.parquet`
 - `data/processed/sales.parquet`
 - `data/processed/event_window.parquet`
-- `reports/figures/` (PNG charts)
+- `reports/reports/figures/` (PNG charts)
 - `reports/playbook_table_public.csv`
 - `reports/decision_memo.md` (template)
 

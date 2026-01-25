@@ -54,4 +54,4 @@ Public data cannot calculate revenue or profit. Any ROI claim must be validated 
 
 ## Appendix
 - Public playbook table: `playbook_table_public.csv`
-- Figures: `figures/`
+- Figures: `reports/figures/`

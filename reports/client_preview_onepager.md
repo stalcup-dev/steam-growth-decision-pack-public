@@ -21,19 +21,19 @@ Source: `reports/playbook_table_public.csv` (top 30 rows by median lift; rounded
 ## 2) Evidence (Charts)
 Overall lift curve:
 
-![Overall lift curve](figures/lift_curve_overall.png)
+![Overall lift curve](reports/figures/lift_curve_overall.png)
 
 Lift curve by tier:
 
-![Lift curve by tier](figures/lift_curve_by_discount_tier.png)
+![Lift curve by tier](reports/figures/lift_curve_by_discount_tier.png)
 
 Seasonal vs non-seasonal lift:
 
-![Seasonal vs non-seasonal lift](figures/lift_curve_seasonal_vs_nonseasonal.png)
+![Seasonal vs non-seasonal lift](reports/figures/lift_curve_seasonal_vs_nonseasonal.png)
 
 Decay by tier:
 
-![Decay by tier](figures/decay_by_discount_tier.png)
+![Decay by tier](reports/figures/decay_by_discount_tier.png)
 
 ## 3) Actionable Recommendations (Guardrails)
 1. **Prioritize mid-depth tiers (51-75%) for top-popularity titles**; these show the strongest median lift in the public table.
