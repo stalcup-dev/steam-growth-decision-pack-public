@@ -1,4 +1,4 @@
-﻿# Steam Promo ROI Decision Pack
+﻿# Steam Promo Decision Pack
 
 Public artifacts for a Steam discount decision pack that turns sale history into a usable 90-day plan.
 
@@ -60,41 +60,15 @@ What it unlocks with Steamworks/partner data:
 
 ## Publish safety (pre-push guard)
 
-After cloning, run:
+Run once after cloning:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\setup_hooks.ps1
 ```
 
-This installs a pre-push hook that runs publish_audit.ps1 and blocks pushes if any non-public files are staged or tracked.
+This installs a pre-push hook that runs `publish_audit.ps1` and blocks pushes if non-public files are staged. To verify anytime:
 
----
-
-## Quick verification commands ✅
-
-Run these locally:
-
-```bash
-git status
-git diff --cached --name-only
+```powershell
 powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
 ```
-
-Then test the guardrail like a maniac:
-
-✅ Create a fake forbidden file:
-
-```bash
-mkdir src
-echo "do not leak" > src/private.txt
-git add src/private.txt
-```
-
-Now audit should FAIL. If it doesn’t, the gate is weak.
-
-
-
-
-
-
 
