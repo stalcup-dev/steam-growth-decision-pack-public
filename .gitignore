@@ -1,4 +1,4 @@
-# Public repo: figures are intended to be tracked.
+﻿# Public repo: figures are intended to be tracked.
 
 # Local caches
 __pycache__/
@@ -6,11 +6,13 @@ __pycache__/
 .pytest_cache/
 
 # Environment
+.env
 .env/
 .venv/
 venv/
 
 # Raw data
+data/
 data/raw/
 
 # Processed artifacts
@@ -26,3 +28,5 @@ tests/
 # OS
 Thumbs.db
 .DS_Store
+
+
