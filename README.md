@@ -24,7 +24,6 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 - Check the Playbook Table
 - If you want ROI: use the Data Request Checklist
 
-
 **Want this for your game?** Open an issue or message me with your Steam `app_id`.
 
 ## What's inside
@@ -61,9 +60,4 @@ powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
 ```
 
 This repo is allowlist-protected and blocks accidental commits of private engine/data.
-
----
-
-CI Status: Publish audit runs automatically on every push/PR via GitHub Actions.
-
 
