@@ -3,6 +3,7 @@
 [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
 
 
+I'm happy to reply with a quick directional next step (2-3 bullets). Full written plans + charts are the paid pack.
 This is a concise overview of the two decision-pack options. For full pricing and scope, request the private offer.
 
 ## Packages

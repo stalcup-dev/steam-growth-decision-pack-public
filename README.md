@@ -27,7 +27,9 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 
 **Want this for your game?** Message me with your Steam `app_id`.
 
-🚀 **Fastest path:** [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform) — I'll reply with the next step I'd take (2–3 bullets).
+🚀 **Fastest path:** [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform) — I'll reply with a quick next step.
+
+I'm happy to reply with a quick directional next step (2-3 bullets). Full written plans + charts are the paid pack.
 
 (Or [view existing requests](../../issues).)
 
@@ -76,5 +78,6 @@ This repo is allowlist-protected and blocks accidental commits of private engine
 - Recommended discount depth: Mid discount (protects price integrity)
 - Timing + duration: Align with next beat; keep duration tight
 - Measure: Baseline shift over 14-30 days (ignore Day 1 spike)
+
 
 

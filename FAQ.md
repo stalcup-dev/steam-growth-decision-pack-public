@@ -1,5 +1,7 @@
 ﻿# FAQ - Steam Growth Decision Pack
 
+I'm happy to reply with a quick directional next step (2-3 bullets). Full written plans + charts are the paid pack.
+
 ## Is this only for big games?
 No. But the right plan depends on baseline traction. Early-stage games need discipline more than deep discounts.
 
@@ -14,4 +16,5 @@ This is not an ads agency. I provide the operating plan. Execution support can b
 
 ## What if we already run sales?
 Perfect. Then we can stop random discounting and start using a discount frequency you can defend and repeat.
+
 
