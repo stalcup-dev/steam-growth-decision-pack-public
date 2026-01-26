@@ -5,6 +5,11 @@ $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Split-Path -Parent $repoRoot
 Set-Location $repoRoot
 
+if (-not (Test-Path ".git")) {
+    Write-Host "Run inside a git repo"
+    exit 1
+}
+
 $hooksDir = Join-Path $repoRoot ".git\hooks"
 if (-not (Test-Path $hooksDir)) {
     New-Item -ItemType Directory -Path $hooksDir -Force | Out-Null
@@ -19,4 +24,4 @@ $hookContent = "#!/bin/sh`n" +
 "fi`n"
 
 Set-Content -Path $hookPath -Value $hookContent -Encoding ASCII
-Write-Host "Installed pre-push hook at $hookPath"
+Write-Host "Installed pre-push hook ?"

@@ -65,6 +65,24 @@ Before publishing: run `scripts/publish_audit.ps1`.
 - Run `./publish_audit.ps1`
 - (Optional) Run `./scripts/setup_hooks.ps1` to install the pre-push hook
 
+## Safety (pre-push leak gate)
+
+This repo includes a publish audit that blocks accidental commits of private artifacts (e.g., data/, parquet/zip, notebooks/, src/).
+
+Run once after cloning:
+
+```powershell
+.\setup_hooks.ps1
+```
+
+This installs a pre-push hook (sh script compatible with Git for Windows / Git Bash) that runs:
+
+```powershell
+.\publish_audit.ps1
+```
+
+If the audit fails, the push is blocked.
+
 ## Notes
 - The pipeline infers column mappings and logs them in the data profile report.
 - Discount values are standardized to 0?100 percent.
