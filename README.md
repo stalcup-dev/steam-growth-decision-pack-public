@@ -18,6 +18,13 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 - 👉 [Public vs Private](./PUBLIC_VS_PRIVATE.md)
 - 👉 [Service Offer](./SERVICE_OFFER_PUBLIC.md)
 
+## How to use this (2 minutes)
+- Read the one-pager
+- Skim the decision memo
+- Check the playbook table
+- If you want ROI: use the data request checklist
+
+
 **Want this for your game?** Open an issue or message me with your Steam `app_id`.
 
 ## What's inside
@@ -75,3 +82,4 @@ Commit message:
 release: public decision pack v1
 
 This should be a no-change commit only if needed, otherwise bundle it with the README cleanup if you want fewer commits.
+
