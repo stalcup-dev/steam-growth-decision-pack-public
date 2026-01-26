@@ -1,6 +1,20 @@
-﻿# Steam Discount Decision Pack (Public Preview)
+﻿# Steam Discount Decision Pack 
 
-Public artifacts for a Steam discount decision pack that turns historical sale patterns into a usable 90-day plan.
+## How to use this (2 minutes)
+- Read the [One-Pager](./client_preview_onepager.md)
+- Skim the [Decision Memo](./decision_memo.md)
+- Check the [Playbook Table](./playbook_table_public.csv)
+- If you want ROI: use the [Data Request Checklist](./docs/DATA_REQUEST_CLIENT.md)
+
+**Want this for your game?**  
+🚀 **Fastest path:** [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
+
+I’ll reply with a **quick next move (2–3 bullets)** based on your Steam link + next beat (sale/update/fest).  
+If you want the **full written 90-day plan + charts**, that’s the **Decision Pack**.
+
+(Or [view existing requests](../../issues).)
+
+---
 
 ## What this is
 I help Steam devs pick discount depth, timing, and duration using lift/decay patterns from historical sale episodes. The framework: goal → discount depth → timing → duration → next step.
@@ -19,19 +33,6 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 - 👉 [Service Offer](./SERVICE_OFFER_PUBLIC.md)
 - 👉 [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
 
-## How to use this (2 minutes)
-- Read the One-Pager
-- Skim the Decision Memo
-- Check the Playbook Table
-- If you want ROI: use the Data Request Checklist
-
-**Want this for your game?** Message me with your Steam `app_id`.
-
-🚀 **Fastest path:** [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform) — I'll reply with a quick next step.
-
-I'm happy to reply with a quick directional next step (2-3 bullets). Full written plans + charts are the paid pack.
-
-(Or [view existing requests](../../issues).)
 
 ## What's inside
 - `client_preview_onepager.md` (preview deliverable)
@@ -52,22 +53,6 @@ I'm happy to reply with a quick directional next step (2-3 bullets). Full writte
 | Refunds/chargebacks | No | Yes |
 | Wishlists + conversions | No | Yes |
 | Regional/channel mix | No | Yes |
-
-## Publish safety (pre-push guard)
-After cloning, run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\setup_hooks.ps1
-```
-
-Verify:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
-```
-
-This repo is allowlist-protected and blocks accidental commits of private engine/data.
-
 
 
 ## Mini-Proof Preview (Example Output)
