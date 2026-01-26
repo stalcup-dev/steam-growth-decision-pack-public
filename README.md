@@ -1,14 +1,15 @@
-﻿# Steam Promo Decision Pack
+﻿# Steam Discount Decision Pack (Public Preview)
 
-Public artifacts for a Steam discount decision pack that turns sale history into a usable 90-day plan.
+Public artifacts for a Steam discount decision pack that turns historical sale patterns into a usable 90-day plan.
 
 ## What this is
-
 I help Steam devs pick **discount timing + depth + cadence** using lift/decay patterns from historical sale episodes.
-You get a **Decision Pack** (one-pager + memo + charts + playbook table) plus a **90-day discount plan** you can execute.
-This public preview uses engagement signals only; ROI/profit conclusions require Steamworks exports.
 
-**Preview the deliverable:**
+You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) plus a **90-day plan** you can execute.
+
+**This public preview uses engagement signals only** (playercount + price history). **ROI/profit conclusions require Steamworks exports.**
+
+### Preview the deliverable
 - 👉 [Client Preview One-Pager](./client_preview_onepager.md)
 - 👉 [Decision Memo](./decision_memo.md)
 - 👉 [Public Playbook Table (Top 30)](./playbook_table_public.csv)
@@ -17,7 +18,7 @@ This public preview uses engagement signals only; ROI/profit conclusions require
 - 👉 [Public vs Private](./PUBLIC_VS_PRIVATE.md)
 - 👉 [Service Offer](./SERVICE_OFFER_PUBLIC.md)
 
-**Want this for your game?** Open an issue or message me with your Steam app_id and I'll share the upgrade options.
+**Want this for your game?** Open an issue or message me with your Steam `app_id`.
 
 ## What's inside
 - `client_preview_onepager.md` (preview deliverable)
@@ -27,20 +28,6 @@ This public preview uses engagement signals only; ROI/profit conclusions require
 - `docs/DATA_REQUEST_CLIENT.md` (client data checklist)
 - `docs/REVENUE_ROI_PACK.md` (ROI upgrade details)
 - `FAQ.md` (common questions)
-## Public vs Private
-
-## Public v1 (Engagement Lift Pack)
-What it does:
-- Builds an event window, lift curves, and a playbook of discount segments using public playercount + price history.
-
-Limitations:
-- No revenue, refunds, wishlists, or region/channel mix, so you cannot compute net ROI or margin impact.
-- Lift is an engagement proxy only.
-
-## Client Upgrade (Revenue ROI Pack)
-What it unlocks with Steamworks/partner data:
-- Net revenue ROI by discount tier, region, and lifecycle stage.
-- Incremental gross margin, refund risk, and long-term retention value.
 
 ## Signals map (Public vs Client)
 | Signal | Public dataset (Mendeley) | Client data (Steamworks/partner) |
@@ -53,22 +40,38 @@ What it unlocks with Steamworks/partner data:
 | Wishlists + conversions | No | Yes |
 | Regional/channel mix | No | Yes |
 
-## Next steps
-- Data request: `docs/DATA_REQUEST_CLIENT.md`
-- Decision memo: `decision_memo.md`
-- Public playbook table: `playbook_table_public.csv`
-
 ## Publish safety (pre-push guard)
-
-Run once after cloning:
+After cloning, run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\setup_hooks.ps1
 ```
 
-This installs a pre-push hook that runs `publish_audit.ps1` and blocks pushes if non-public files are staged. To verify anytime:
+Verify:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
 ```
 
+This repo is allowlist-protected and blocks accidental commits of private engine/data.
+
+---
+
+# ✅ CI PASS Check (what to do right now)
+CA is correct: we need to confirm the workflow is green **once** before the final release commit.
+
+### Option A: GitHub UI
+GitHub → **Actions** tab → **publish-audit** → confirm latest run on `main` is ✅ green
+
+### Option B: CLI (if you have gh installed)
+```bash
+gh run list --workflow publish-audit.yml -L 3
+```
+
+✅ Final Ticket (after CI is green)
+TCK-SGB-012 — Final release commit
+
+Commit message:
+release: public decision pack v1
+
+This should be a no-change commit only if needed, otherwise bundle it with the README cleanup if you want fewer commits.
