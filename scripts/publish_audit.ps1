@@ -4,7 +4,13 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Split-Path -Parent $scriptDir
 Set-Location $repoRoot
 
-$files = git ls-files
+$trackedFiles = (git ls-files) -split "
+?
+"
+$stagedFiles = (git diff --cached --name-only) -split "
+?
+"
+$files = @($trackedFiles + $stagedFiles) | Where-Object { $_ -and $_.Trim() -ne "" } | Sort-Object -Unique
 if (-not $files) {
     Write-Host "No tracked files found. Is this a git repo?"
     exit 1
@@ -14,8 +20,8 @@ $rules = @(
     @{ Pattern = '^src/'; Reason = 'src/ is not allowed in public repo' },
     @{ Pattern = '^notebooks/'; Reason = 'notebooks/ is not allowed in public repo' },
     @{ Pattern = '^tests/'; Reason = 'tests/ is not allowed in public repo' },
-    @{ Pattern = '\\.parquet$'; Reason = '.parquet files are not allowed' },
-    @{ Pattern = '\\.zip$'; Reason = '.zip files are not allowed' },
+    @{ Pattern = '\.parquet$'; Reason = '.parquet files are not allowed' },
+    @{ Pattern = '\.zip$'; Reason = '.zip files are not allowed' },
     @{ Pattern = '^data/raw/'; Reason = 'data/raw is not allowed' },
     @{ Pattern = '^data/processed/'; Reason = 'data/processed is not allowed' },
     @{ Pattern = '^reports/.*audit'; Reason = 'reports/*audit* is not allowed' },
