@@ -26,7 +26,9 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 
 **Want this for your game?** Open an issue or message me with your Steam `app_id`.
 
-**Fastest path:** [Open a Decision Pack request](../../issues/new?template=decision-pack.yml) and I'll reply with a directional **tier × timing × cadence** recommendation.
+🚀 **Fastest path:** [Open a Decision Pack request](../../issues/new?template=decision-pack.yml) — I'll reply with a directional **tier × timing × cadence** recommendation.
+
+(Or [view existing requests](../../issues).)
 
 ## What's inside
 - `client_preview_onepager.md` (preview deliverable)
