@@ -61,6 +61,10 @@ Before publishing: run `scripts/publish_audit.ps1`.
 - `reports/playbook_table_public.csv`
 - `reports/decision_memo.md` (template)
 
+## Publishing checklist
+- Run `./publish_audit.ps1`
+- (Optional) Run `./scripts/setup_hooks.ps1` to install the pre-push hook
+
 ## Notes
 - The pipeline infers column mappings and logs them in the data profile report.
 - Discount values are standardized to 0?100 percent.
