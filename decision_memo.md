@@ -9,20 +9,20 @@ Summarize sale strategy options using public engagement signals, while clearly g
 - Notes: [fill in]
 
 ## What we can infer from public data
-- Engagement lift patterns by discount tier, popularity, and cadence.
+- Engagement lift patterns by discount depth, popularity, and discount frequency.
 - Relative lift stability across segments (after minimum sample thresholds).
 - Which tiers show consistent playercount response (engagement proxy, not revenue).
 - Mechanism tags: wishlist-notify eligibility (>=20% discount heuristic) and seasonal overlap (major sale windows).
 
 ## What requires partner data
-- Units sold, net revenue, and margin impact by tier/region/channel.
+- Units sold, net revenue, and margin impact by discount depth/region/channel.
 - Refund/chargeback effects and true net vs gross impact.
 - Retention and long-term value effects beyond short-term lift.
 
 ## Public playbook excerpt (top 10)
 Source: `playbook_table_public.csv` (top 30 rows by median lift; rounded for public share).
 
-| discount_tier_bucket | popularity_bucket | cadence_bucket | n_sales | median_peak_lift_pct | median_AUL | median_decay_days_to_baseline |
+| discount_tier_bucket | popularity_bucket | discount frequency_bucket | n_sales | median_peak_lift_pct | median_AUL | median_decay_days_to_baseline |
 | --- | --- | --- | --- | --- | --- | --- |
 | 51-75% | Q1 | mid | 650 | 239.1 | 9.6 | 4.0 |
 | 76-100% | Q1 | mid | 356 | 228.4 | 8.99 | 4.0 |
@@ -37,7 +37,7 @@ Source: `playbook_table_public.csv` (top 30 rows by median lift; rounded for pub
 
 ## Revenue levers translation (framing only)
 - Engagement lift -> potential units proxy hypothesis (higher lift may correlate with units sold).
-- Depth and cadence tiers -> candidate levers for pricing strategy experiments.
+- Depth and discount frequency tiers -> candidate levers for pricing strategy experiments.
 - These are directional signals only until validated with net revenue exports.
 - Mechanism tags are hypothesis labels, not causal proof; validate with partner exports.
 
@@ -55,4 +55,5 @@ Public data cannot calculate revenue or profit. Any ROI claim must be validated 
 ## Appendix
 - Public playbook table: `playbook_table_public.csv`
 - Figures: `reports/figures/`
+
 

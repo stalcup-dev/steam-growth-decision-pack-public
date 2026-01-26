@@ -13,4 +13,5 @@ Not for the basic pack. Revenue is required only for ROI/profit sizing.
 This is not an ads agency. I provide the operating plan. Execution support can be added as a separate sprint.
 
 ## What if we already run sales?
-Perfect. Then we can stop random discounting and start using a cadence you can defend and repeat.
+Perfect. Then we can stop random discounting and start using a discount frequency you can defend and repeat.
+

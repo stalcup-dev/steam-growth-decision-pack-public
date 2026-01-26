@@ -1,6 +1,6 @@
-# Revenue ROI Pack (Client Upgrade)
+﻿# Revenue ROI Pack (Client Upgrade)
 
-This pack turns engagement lift into revenue ROI by combining Steamworks sales data with your promo calendar. The goal is a decision-ready view of net impact by discount tier, region, and cadence.
+This pack turns engagement lift into revenue ROI by combining Steamworks sales data with your promo calendar. The goal is a decision-ready view of net impact by discount depth, region, and discount frequency.
 
 ## Inputs (required exports)
 Provide daily files with `app_id` and `date` in every file.
@@ -28,10 +28,12 @@ Provide daily files with `app_id` and `date` in every file.
 - If you cannot deliver daily, provide the finest available and state the aggregation rules.
 
 ## Outputs you receive
-- ROI table by discount tier, cadence, and popularity segment.
-- Promo plan recommendations (tier + cadence combos).
+- ROI table by discount depth, discount frequency, and popularity segment.
+- Promo plan recommendations (discount depth + discount frequency combos).
 - Net impact estimate with sensitivity bands (best/likely/worst).
 
 ## Delivery format
 - CSV or Parquet, UTF-8.
 - Zip the drop and include a short `README.txt` with date range and timezone.
+
+

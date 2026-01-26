@@ -3,7 +3,7 @@
 Public artifacts for a Steam discount decision pack that turns historical sale patterns into a usable 90-day plan.
 
 ## What this is
-I help Steam devs pick **discount timing + depth + cadence** using lift/decay patterns from historical sale episodes.
+I help Steam devs pick discount depth, timing, and duration using lift/decay patterns from historical sale episodes. The framework: goal → discount depth → timing → duration → next step.
 
 You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) plus a **90-day plan** you can execute.
 
@@ -65,4 +65,6 @@ powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
 ```
 
 This repo is allowlist-protected and blocks accidental commits of private engine/data.
+
+
 
