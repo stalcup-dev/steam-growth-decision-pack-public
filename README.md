@@ -13,7 +13,7 @@ If you share Steamworks exports, I upgrade this into **real ROI/profit impact** 
 - 👉 [Decision Memo](./decision_memo.md)
 - 👉 [Public Playbook Table (Top 30)](./playbook_table_public.csv)
 - 👉 [Client Data Request Checklist](./docs/DATA_REQUEST_CLIENT.md)
-- 👉 [FAQ](./docs/FAQ.md)
+- 👉 [FAQ](./FAQ.md)
 
 **Want this for your game?** Open an issue or message me with your Steam app_id and I'll share the upgrade options.
 
@@ -88,5 +88,6 @@ git add src/private.txt
 ```
 
 Now audit should FAIL. If it doesn’t, the gate is weak.
+
 
 

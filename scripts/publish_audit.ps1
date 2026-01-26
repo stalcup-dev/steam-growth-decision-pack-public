@@ -26,7 +26,7 @@ function Test-AllowedPath {
         "SERVICE_OFFER_PUBLIC.md",
         "docs/DATA_REQUEST_CLIENT.md",
         "docs/REVENUE_ROI_PACK.md",
-        "docs/FAQ.md",
+        "FAQ.md",
         "REPO_STATE.md",
         ".github/workflows/publish-audit.yml",
         "publish_audit.ps1",
@@ -80,5 +80,6 @@ if ($blocked.Count -gt 0) {
 
 Write-Host "Publish Audit PASSED - all files are allowlisted."
 exit 0
+
 
 
