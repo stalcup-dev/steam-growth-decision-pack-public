@@ -64,22 +64,5 @@ This repo is allowlist-protected and blocks accidental commits of private engine
 
 ---
 
-# ✅ CI PASS Check (what to do right now)
-CA is correct: we need to confirm the workflow is green **once** before the final release commit.
-
-### Option A: GitHub UI
-GitHub → **Actions** tab → **publish-audit** → confirm latest run on `main` is ✅ green
-
-### Option B: CLI (if you have gh installed)
-```bash
-gh run list --workflow publish-audit.yml -L 3
-```
-
-✅ Final Ticket (after CI is green)
-TCK-SGB-012 — Final release commit
-
-Commit message:
-release: public decision pack v1
-
-This should be a no-change commit only if needed, otherwise bundle it with the README cleanup if you want fewer commits.
+CI Status: Publish audit runs automatically on every push/PR via GitHub Actions.
 
