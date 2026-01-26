@@ -26,9 +26,9 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 
 **Want this for your game?** Open an issue or message me with your Steam `app_id`.
 
-🚀 **Fastest path:** [Open a Decision Pack request](../../issues/new?template=decision-pack.yml) — I'll reply with a directional **tier × timing × cadence** recommendation.
+🚀 **Fastest path:** [Open a Decision Pack request](../../issues/new?template=decision-pack.yml) — I’ll reply with the next step I’d take (2–3 bullets).
 
-(Or [view existing requests](../../issues).)
+(Or [view existing requests](../../issues).)\r\n\r\nPrefer private? Use the intake form: [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform).
 
 ## What's inside
 - `client_preview_onepager.md` (preview deliverable)
@@ -64,4 +64,5 @@ powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
 ```
 
 This repo is allowlist-protected and blocks accidental commits of private engine/data.
+
 
