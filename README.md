@@ -68,3 +68,13 @@ This repo is allowlist-protected and blocks accidental commits of private engine
 
 
 
+## Mini-Proof Preview (Example Output)
+
+![Overall lift curve](reports/figures/lift_curve_overall.png)
+
+- Goal: Conversion (next sale window)
+- Recommended discount depth: Mid discount (protects price integrity)
+- Timing + duration: Align with next beat; keep duration tight
+- Measure: Baseline shift over 14-30 days (ignore Day 1 spike)
+
+
