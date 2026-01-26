@@ -1,24 +1,30 @@
 ﻿# Steam Promo ROI Decision Pack
 
-Notebook-first pipeline that turns Steam discount histories into a decision pack: Public v1 shows engagement lift, and the Client upgrade adds revenue inputs to quantify net ROI.
-Use this repo to validate lift patterns now, then plug in Steamworks/partner data to move from "what happened" to "what it earned."
+Notebook-first pipeline that turns Steam discount histories into a decision pack.
 
-## Quick start
-1) Place the Mendeley dataset under `data/raw/mendeley/` (any file names; the pipeline scans recursively).
-2) Create a virtualenv and install deps:
+## What this is
 
-```bash
-python -m venv .venv
-. .venv/Scripts/activate
-pip install -r requirements.txt
-```
+I help Steam devs pick **discount timing + depth + cadence** using data-backed lift/decay patterns from real historical sale episodes.
+You get a **Decision Pack** (one-pager + memo + charts + playbook table) plus a **90-day discount plan** you can actually execute.
+If you share Steamworks exports, I upgrade this into **real ROI/profit impact** instead of engagement-only signals.
 
-3) Run notebooks in order:
-- `notebooks/00_data_profile.ipynb`
-- `notebooks/01_build_daily_panel.ipynb`
-- `notebooks/02_detect_sales.ipynb`
-- `notebooks/03_event_study.ipynb`
-- `notebooks/04_playbook_tables.ipynb`
+**Preview the deliverable:**
+- 👉 [Client Preview One-Pager](./client_preview_onepager.md)
+- 👉 [Decision Memo](./decision_memo.md)
+- 👉 [Public Playbook Table (Top 30)](./playbook_table_public.csv)
+- 👉 [Client Data Request Checklist](./docs/DATA_REQUEST_CLIENT.md)
+- 👉 [FAQ](./docs/FAQ.md)
+
+**Want this for your game?** Open an issue or message me with your Steam app_id and I'll share the upgrade options.
+
+## What's inside
+- `client_preview_onepager.md` (preview deliverable)
+- `decision_memo.md` (decision memo)
+- `playbook_table_public.csv` (top 30 segments)
+- `reports/figures/` (lift/decay charts)
+- `docs/DATA_REQUEST_CLIENT.md` (client data checklist)
+- `docs/REVENUE_ROI_PACK.md` (ROI upgrade details)
+## Public vs Private
 
 ## Public v1 (Engagement Lift Pack)
 What it does:
@@ -46,52 +52,41 @@ What it unlocks with Steamworks/partner data:
 
 ## Next steps
 - Data request: `docs/DATA_REQUEST_CLIENT.md`
-- Decision memo: `reports/decision_memo.md`
-- Public playbook table: `reports/playbook_table_public.csv`
+- Decision memo: `decision_memo.md`
+- Public playbook table: `playbook_table_public.csv`
 
-## Publish gate
-Before publishing: run `scripts/publish_audit.ps1`.
+## Publish safety (pre-push guard)
 
-
-## Outputs
-- `data/processed/panel_daily.parquet`
-- `data/processed/sales.parquet`
-- `data/processed/event_window.parquet`
-- `reports/reports/figures/` (PNG charts)
-- `reports/playbook_table_public.csv`
-- `reports/decision_memo.md` (template)
-
-## Publishing checklist
-- Run `./publish_audit.ps1`
-- (Optional) Run `./scripts/setup_hooks.ps1` to install the pre-push hook
-
-## Safety (pre-push leak gate)
-
-This repo includes a publish audit that blocks accidental commits of private artifacts (e.g., data/, parquet/zip, notebooks/, src/).
-
-Run once after cloning:
+After cloning, run:
 
 ```powershell
-.\setup_hooks.ps1
+powershell -ExecutionPolicy Bypass -File .\setup_hooks.ps1
 ```
 
-This installs a pre-push hook (sh script compatible with Git for Windows / Git Bash) that runs:
+This installs a pre-push hook that runs publish_audit.ps1 and blocks pushes if any non-public files are staged or tracked.
 
-```powershell
-.\publish_audit.ps1
-```
+---
 
-If the audit fails, the push is blocked.
+## Quick verification commands ✅
 
-## Notes
-- The pipeline infers column mappings and logs them in the data profile report.
-- Discount values are standardized to 0?100 percent.
-- Sales detection requires price/discount data. If price data is missing, sale detection fails with a clear error.
-Implementation code is maintained privately; this repo is the client-preview decision pack.
-
-## Tests
-Run unit tests with:
+Run these locally:
 
 ```bash
-pytest -q
+git status
+git diff --cached --name-only
+powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
 ```
+
+Then test the guardrail like a maniac:
+
+✅ Create a fake forbidden file:
+
+```bash
+mkdir src
+echo "do not leak" > src/private.txt
+git add src/private.txt
+```
+
+Now audit should FAIL. If it doesn’t, the gate is weak.
+
+

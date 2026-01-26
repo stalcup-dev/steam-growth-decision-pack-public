@@ -1,10 +1,10 @@
-# Public vs Private Boundary
+﻿# Public vs Private Boundary
 
 This page clarifies what is included in the public preview and what is only delivered as paid client work.
 
 ## What this repo contains (public)
-- Preview pack: `reports/client_preview_onepager.md`
-- Decision memo (public template): `reports/decision_memo.md`
+- Preview pack: `client_preview_onepager.md`
+- Decision memo (public template): `decision_memo.md`
 - Stable playbook table: `reports/playbook_table_stable.csv`
 - Evidence charts: `reports/figures/*.png`
 - Client data request checklist: `docs/DATA_REQUEST_CLIENT.md`
@@ -20,3 +20,4 @@ This page clarifies what is included in the public preview and what is only deli
 - Review the offer: `docs/SERVICE_OFFER.md`
 - Prepare data inputs: `docs/DATA_REQUEST_CLIENT.md`
 - Then share your data drop to start the ROI pack
+

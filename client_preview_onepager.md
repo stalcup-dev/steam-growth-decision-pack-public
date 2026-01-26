@@ -3,7 +3,7 @@
 **What this is:** A decision-ready preview using public Steam data (engagement lift) with a clear path to net revenue ROI once Steamworks exports are provided.
 
 ## 1) Public Top Segments (Public v1)
-Source: `reports/playbook_table_public.csv` (top 30 rows by median lift; rounded for public share).
+Source: `playbook_table_public.csv` (top 30 rows by median lift; rounded for public share).
 
 | discount_tier_bucket | popularity_bucket | cadence_bucket | n_sales | median_peak_lift_pct | median_AUL | median_decay_days_to_baseline |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -55,3 +55,4 @@ Provide the minimum or gold-standard data drop listed here:
 ## Upgrade Path: Revenue ROI Pack
 Public data shows engagement lift, but ROI requires net revenue exports. The upgrade pack delivers revenue-by-tier ROI, refund-adjusted impact, and region-specific promo guidance:
 - `../docs/REVENUE_ROI_PACK.md`
+

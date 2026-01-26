@@ -4,48 +4,78 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Split-Path -Parent $scriptDir
 Set-Location $repoRoot
 
-$trackedFiles = (git ls-files) -split "
-?
-"
-$stagedFiles = (git diff --cached --name-only) -split "
-?
-"
-$files = @($trackedFiles + $stagedFiles) | Where-Object { $_ -and $_.Trim() -ne "" } | Sort-Object -Unique
-if (-not $files) {
-    Write-Host "No tracked files found. Is this a git repo?"
-    exit 1
+function Get-GitPaths {
+    param([string[]]$GitArgs)
+
+    $out = & git @GitArgs 2>$null
+    if ($LASTEXITCODE -ne 0) { return @() }
+
+    return ($out -split "`n") | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne "" }
 }
 
-$rules = @(
-    @{ Pattern = '^src/'; Reason = 'src/ is not allowed in public repo' },
-    @{ Pattern = '^notebooks/'; Reason = 'notebooks/ is not allowed in public repo' },
-    @{ Pattern = '^tests/'; Reason = 'tests/ is not allowed in public repo' },
-    @{ Pattern = '\.parquet$'; Reason = '.parquet files are not allowed' },
-    @{ Pattern = '\.zip$'; Reason = '.zip files are not allowed' },
-    @{ Pattern = '^data/raw/'; Reason = 'data/raw is not allowed' },
-    @{ Pattern = '^data/processed/'; Reason = 'data/processed is not allowed' },
-    @{ Pattern = '^reports/.*audit'; Reason = 'reports/*audit* is not allowed' },
-    @{ Pattern = '^reports/.*summary'; Reason = 'reports/*summary* is not allowed' },
-    @{ Pattern = '^reports/.*stable'; Reason = 'reports/*stable* is not allowed' },
-    @{ Pattern = '^reports/.*raw'; Reason = 'reports/*raw* is not allowed' }
-)
+function Test-AllowedPath {
+    param([string]$Path)
 
-$violations = @()
-foreach ($file in $files) {
-    foreach ($rule in $rules) {
-        if ($file -match $rule.Pattern) {
-            $violations += [PSCustomObject]@{
-                File = $file
-                Reason = $rule.Reason
-            }
-        }
+    $p = $Path -replace "\\", "/"
+    $allowedExact = @(
+        "README.md",
+        "client_preview_onepager.md",
+        "decision_memo.md",
+        "playbook_table_public.csv",
+        "PUBLIC_VS_PRIVATE.md",
+        "SERVICE_OFFER_PUBLIC.md",
+        "docs/DATA_REQUEST_CLIENT.md",
+        "docs/REVENUE_ROI_PACK.md",
+        "docs/FAQ.md",
+        "publish_audit.ps1",
+        "scripts/publish_audit.ps1",
+        "setup_hooks.ps1",
+        "scripts/setup_hooks.ps1",
+        ".gitignore",
+        "LICENSE"
+    )
+$allowedGlobs = @(
+        "reports/figures/*.png"
+    )
+
+    if ($allowedExact -contains $p) { return $true }
+
+    foreach ($g in $allowedGlobs) {
+        if ($p -like $g) { return $true }
+    }
+
+    return $false
+}
+
+Write-Host "Publish Audit (ALLOWLIST MODE) - scanning tracked + staged files..."
+
+$tracked = Get-GitPaths -GitArgs @("ls-files")
+$staged = Get-GitPaths -GitArgs @("diff", "--cached", "--name-only")
+
+$all = @($tracked + $staged) | Sort-Object -Unique
+
+if ($all.Count -eq 0) {
+    Write-Host "No files detected. (Nothing to validate)"
+    exit 0
+}
+
+$blocked = @()
+
+foreach ($f in $all) {
+    if (-not (Test-AllowedPath -Path $f)) {
+        $blocked += $f
     }
 }
 
-if ($violations.Count -gt 0) {
-    Write-Host "Publish audit failed:"
-    $violations | Sort-Object File, Reason | Format-Table -AutoSize
+if ($blocked.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Publish Audit FAILED - non-allowlisted files detected:"
+    $blocked | ForEach-Object { Write-Host "  - $_" }
+    Write-Host ""
+    Write-Host "Fix: unstage/remove these files, or explicitly add to allowlist if truly public-safe."
     exit 1
 }
 
-Write-Host "OK to publish ✅"
+Write-Host "Publish Audit PASSED - all files are allowlisted."
+exit 0
+

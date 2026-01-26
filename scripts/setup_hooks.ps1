@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -24,4 +24,5 @@ $hookContent = "#!/bin/sh`n" +
 "fi`n"
 
 Set-Content -Path $hookPath -Value $hookContent -Encoding ASCII
-Write-Host "Installed pre-push hook ?"
+Write-Host "Installed pre-push hook ✅"
+
