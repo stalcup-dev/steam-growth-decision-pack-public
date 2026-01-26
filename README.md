@@ -17,6 +17,7 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 - 👉 [FAQ](./FAQ.md)
 - 👉 [Public vs Private](./PUBLIC_VS_PRIVATE.md)
 - 👉 [Service Offer](./SERVICE_OFFER_PUBLIC.md)
+- 👉 [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
 
 ## How to use this (2 minutes)
 - Read the One-Pager
@@ -24,11 +25,11 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 - Check the Playbook Table
 - If you want ROI: use the Data Request Checklist
 
-**Want this for your game?** Open an issue or message me with your Steam `app_id`.
+**Want this for your game?** Message me with your Steam `app_id`.
 
-🚀 **Fastest path:** [Open a Decision Pack request](../../issues/new?template=decision-pack.yml) — I’ll reply with the next step I’d take (2–3 bullets).
+🚀 **Fastest path:** [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform) — I'll reply with the next step I'd take (2–3 bullets).
 
-(Or [view existing requests](../../issues).)\r\n\r\nPrefer private? Use the intake form: [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform).
+(Or [view existing requests](../../issues).)
 
 ## What's inside
 - `client_preview_onepager.md` (preview deliverable)
@@ -64,5 +65,4 @@ powershell -ExecutionPolicy Bypass -File .\publish_audit.ps1
 ```
 
 This repo is allowlist-protected and blocks accidental commits of private engine/data.
-
 

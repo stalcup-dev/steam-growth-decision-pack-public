@@ -1,4 +1,7 @@
-# Service Offer (Public Overview)
+﻿# Service Offer (Public Overview)
+
+[Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
+
 
 This is a concise overview of the two decision-pack options. For full pricing and scope, request the private offer.
 
@@ -24,7 +27,7 @@ Deliverables:
 - Promo plan recommendations + guardrails
 - Updated decision memo + exec-ready visuals
 
-Turnaround: **~3–4 weeks** after data delivery + kickoff.
+Turnaround: **~3-4 weeks** after data delivery + kickoff.
 
 ## What you provide
 - Data drop per `docs/DATA_REQUEST_CLIENT.md`
@@ -34,3 +37,9 @@ Turnaround: **~3–4 weeks** after data delivery + kickoff.
 ## What this excludes (public version)
 - Exact pricing and discount terms
 - Negotiation notes or internal cost structure
+
+---
+
+Ready? [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform).
+
+

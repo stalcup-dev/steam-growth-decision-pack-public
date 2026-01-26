@@ -1,3 +1,5 @@
+﻿[Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform) (if you haven't requested the pack yet).
+
 # Client Data Request (Minimum vs Gold Standard)
 
 This checklist defines the minimum viable drop and the gold-standard drop needed to compute revenue ROI. Daily data with `app_id` is required.
@@ -55,3 +57,4 @@ Marketing calendar (optional):
 
 ## Delivery
 - Zip all files and include a short `README.txt` with date range and timezone.
+
