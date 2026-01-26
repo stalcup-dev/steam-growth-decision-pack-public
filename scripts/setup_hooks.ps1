@@ -11,11 +11,12 @@ if (-not (Test-Path $hooksDir)) {
 }
 
 $hookPath = Join-Path $hooksDir "pre-push"
-$hookContent = "powershell -ExecutionPolicy Bypass -File ./publish_audit.ps1`n" +
-"if (`$LASTEXITCODE -ne 0) {`n" +
-"  Write-Host `"Publish audit failed. Push blocked.`"`n" +
+$hookContent = "#!/bin/sh`n" +
+"powershell -ExecutionPolicy Bypass -File ./publish_audit.ps1`n" +
+"if [ `$? -ne 0 ]; then`n" +
+"  echo `"Publish audit failed. Push blocked.`"`n" +
 "  exit 1`n" +
-"}`n"
+"fi`n"
 
 Set-Content -Path $hookPath -Value $hookContent -Encoding ASCII
 Write-Host "Installed pre-push hook at $hookPath"
