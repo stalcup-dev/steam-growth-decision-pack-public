@@ -1,0 +1,18 @@
+﻿name: Publish Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  publish-audit:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run publish audit
+        shell: pwsh
+        run: |
+          ./publish_audit.ps1
