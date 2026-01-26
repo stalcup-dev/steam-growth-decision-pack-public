@@ -19,10 +19,10 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 - 👉 [Service Offer](./SERVICE_OFFER_PUBLIC.md)
 
 ## How to use this (2 minutes)
-- Read the one-pager
-- Skim the decision memo
-- Check the playbook table
-- If you want ROI: use the data request checklist
+- Read the One-Pager
+- Skim the Decision Memo
+- Check the Playbook Table
+- If you want ROI: use the Data Request Checklist
 
 
 **Want this for your game?** Open an issue or message me with your Steam `app_id`.
@@ -65,4 +65,5 @@ This repo is allowlist-protected and blocks accidental commits of private engine
 ---
 
 CI Status: Publish audit runs automatically on every push/PR via GitHub Actions.
+
 
