@@ -1,0 +1,73 @@
+﻿name: Decision Pack Intake
+description: Request a Steam discount decision pack for your game.
+title: "Decision Pack Request: <app_id>"
+labels:
+  - decision-pack
+body:
+  - type: input
+    id: app_id
+    attributes:
+      label: Steam app_id
+      description: Your Steam app id (number).
+      placeholder: "480"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: game_age
+    attributes:
+      label: Game age
+      options:
+        - New (0-6 months)
+        - Mid (6-24 months)
+        - Mature (2+ years)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: wishlist_trend
+    attributes:
+      label: Wishlist trend (last 30-90 days)
+      options:
+        - Up
+        - Flat
+        - Down
+        - Unknown
+    validations:
+      required: true
+
+  - type: input
+    id: next_update_date
+    attributes:
+      label: Next update date
+      description: If known. Use YYYY-MM-DD.
+      placeholder: "2026-02-15"
+    validations:
+      required: false
+
+  - type: input
+    id: next_sale_window
+    attributes:
+      label: Next sale window
+      description: If known (e.g., dates or the Steam event).
+      placeholder: "2026-03-14 to 2026-03-21" 
+    validations:
+      required: false
+
+  - type: input
+    id: current_price
+    attributes:
+      label: Current price
+      description: Include currency.
+      placeholder: "$19.99 USD"
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / constraints
+      description: Anything relevant (platforms, DLC, past discount cadence, etc.).
+      placeholder: "We have a major update planned; last discount was 20% 45 days ago."
+    validations:
+      required: false
