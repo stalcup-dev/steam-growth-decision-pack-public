@@ -1,12 +1,12 @@
 ﻿# Steam Promo ROI Decision Pack
 
-Notebook-first pipeline that turns Steam discount histories into a decision pack.
+Public artifacts for a Steam discount decision pack that turns sale history into a usable 90-day plan.
 
 ## What this is
 
-I help Steam devs pick **discount timing + depth + cadence** using data-backed lift/decay patterns from real historical sale episodes.
-You get a **Decision Pack** (one-pager + memo + charts + playbook table) plus a **90-day discount plan** you can actually execute.
-If you share Steamworks exports, I upgrade this into **real ROI/profit impact** instead of engagement-only signals.
+I help Steam devs pick **discount timing + depth + cadence** using lift/decay patterns from historical sale episodes.
+You get a **Decision Pack** (one-pager + memo + charts + playbook table) plus a **90-day discount plan** you can execute.
+This public preview uses engagement signals only; ROI/profit conclusions require Steamworks exports.
 
 **Preview the deliverable:**
 - 👉 [Client Preview One-Pager](./client_preview_onepager.md)
@@ -14,6 +14,8 @@ If you share Steamworks exports, I upgrade this into **real ROI/profit impact** 
 - 👉 [Public Playbook Table (Top 30)](./playbook_table_public.csv)
 - 👉 [Client Data Request Checklist](./docs/DATA_REQUEST_CLIENT.md)
 - 👉 [FAQ](./FAQ.md)
+- 👉 [Public vs Private](./PUBLIC_VS_PRIVATE.md)
+- 👉 [Service Offer](./SERVICE_OFFER_PUBLIC.md)
 
 **Want this for your game?** Open an issue or message me with your Steam app_id and I'll share the upgrade options.
 
@@ -24,6 +26,7 @@ If you share Steamworks exports, I upgrade this into **real ROI/profit impact** 
 - `reports/figures/` (lift/decay charts)
 - `docs/DATA_REQUEST_CLIENT.md` (client data checklist)
 - `docs/REVENUE_ROI_PACK.md` (ROI upgrade details)
+- `FAQ.md` (common questions)
 ## Public vs Private
 
 ## Public v1 (Engagement Lift Pack)
@@ -88,6 +91,10 @@ git add src/private.txt
 ```
 
 Now audit should FAIL. If it doesn’t, the gate is weak.
+
+
+
+
 
 
 
