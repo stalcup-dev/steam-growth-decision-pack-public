@@ -1,4 +1,5 @@
 ﻿# Steam Discount Decision Pack 
+A **48-hour Decision Pack (fast, decision-focused)** to choose discount depth, timing, and duration — with a 90-day calendar starter.
 
 ## How to use this (2 minutes)
 - Read the [One-Pager](./client_preview_onepager.md)
@@ -7,10 +8,17 @@
 - If you want ROI: use the [Data Request Checklist](./docs/DATA_REQUEST_CLIENT.md)
 
 **Want this for your game?**  
-🚀 **Fastest path:** [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
+🚀 **Fastest path:** [Request a 48-hour Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
 
-I’ll reply with a **quick next move (2–3 bullets)** based on your Steam link + next beat (sale/update/fest).  
-If you want the **full written 90-day plan + charts**, that’s the **Decision Pack**.
+**What you get (48-hour pack):**
+- 1-page decision summary
+- Discount depth/timing/duration recommendation
+- 90-day calendar starter + what to measure
+
+**What happens after you submit:**
+1) You submit the form (Steam store link + stage + next beat)
+2) I confirm constraints + timeline
+3) You receive the pack (48-hour turnaround)
 
 (Or [view existing requests](../../issues).)
 
@@ -49,7 +57,7 @@ You get a **Decision Pack** (one-pager + memo + proof charts + playbook table) p
 - 👉 [FAQ](./FAQ.md)
 - 👉 [Public vs Private](./PUBLIC_VS_PRIVATE.md)
 - 👉 [Service Offer](./SERVICE_OFFER_PUBLIC.md)
-- 👉 [Request a Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
+- 👉 [Request a 48-hour Decision Pack (2 minutes)](https://docs.google.com/forms/d/e/1FAIpQLSfHMP8RZxLca6Tv56k1vsuSPZeAESdGoMzrz-VKMipNI1SO1g/viewform)
 
 
 ## What's inside
