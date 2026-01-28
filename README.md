@@ -16,6 +16,17 @@ If you want the **full written 90-day plan + charts**, that’s the **Decision P
 
 ---
 
+## The impact (plain English)
+Steam discounts aren’t “free marketing” — they’re a tradeoff. A discount that’s too deep (or too frequent) can train players to wait and shrink your future sales. A discount that’s too small (or mistimed) can waste a rare visibility window.
+
+This Decision Pack turns “Should we do 20% or 40%?” into a clear, written plan you can execute.
+
+**You walk away with:**
+- A simple recommendation: **when to discount next**, **how deep**, and **for how long**
+- A **90-day calendar** tied to your next beat (sale/update/fest), so you’re not guessing month-to-month
+- A reusable **playbook** you can follow for future sale windows (not a one-off opinion)
+- Optional upgrade: **ROI/profit view** (requires your Steamworks exports)
+
 ## What this is
 I help Steam devs pick discount depth, timing, and duration using lift/decay patterns from historical sale episodes. The framework: goal → discount depth → timing → duration → next step.
 
