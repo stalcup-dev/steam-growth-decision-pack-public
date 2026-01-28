@@ -1,24 +1,25 @@
 """
 build_tail_validation.py
 
-Purpose:
-Tail validation segmentation for discount tiers with strict definitions:
-- Tail-only lift/decay curves by discount tier
-- Absolute impact for tail (units/revenue uplift, not just % lift)
-- Sample size table to prevent misleading conclusions
+Dual-mode Tail Validation (proxy vs sales).
 
-Requirements:
-- Event-level dataset must include:
-  - sale_id (or event_id equivalent)
-  - k (day offset relative to event start; includes [-14, +14])
-  - metric_daily_units OR metric_daily_revenue
-  - discount_tier_bucket OR discount_pct
+Modes:
+- --metric=playercount (public proxy)
+- --metric=units (requires metric_daily_units)
+- --metric=revenue (requires metric_daily_revenue)
 
-If metric_daily_units / metric_daily_revenue are missing, the script exits with a clear error.
+Outputs:
+- reports/figures/tail_lift_curve_<metric>.png
+- reports/figures/tail_decay_by_tier_<metric>.png
+- reports/figures/lift_curve_by_discount_tier_segmented_<metric>.png
+- reports/figures/tail_absolute_uplift_by_tier_<metric>.png
+- reports/tail_validation_summary_<metric>.csv
+- reports/tail_validation_notes_<metric>.md
 """
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -46,16 +47,37 @@ def require(path: Path) -> None:
         raise FileNotFoundError(f"Missing required file: {path}")
 
 
-def detect_metric_column(df: pd.DataFrame) -> tuple[str, str]:
-    if "metric_daily_units" in df.columns:
-        return "metric_daily_units", "units"
-    if "metric_daily_revenue" in df.columns:
-        return "metric_daily_revenue", "revenue"
-    raise SystemExit(
-        "ERROR: Required metric column not found. Expected 'metric_daily_units' or "
-        "'metric_daily_revenue' in event dataset. Provide raw metric to compute baseline "
-        "and absolute uplift."
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Tail validation segmentation.")
+    parser.add_argument(
+        "--metric",
+        choices=["playercount", "units", "revenue"],
+        default="playercount",
+        help="Metric to use: playercount (proxy), units, or revenue.",
     )
+    return parser.parse_args()
+
+
+def metric_config(metric: str, event_df: pd.DataFrame) -> tuple[str, str, str]:
+    if metric == "playercount":
+        if "players" not in event_df.columns:
+            raise SystemExit("ERROR: 'players' column not found for playercount proxy.")
+        return "players", "engagement proxy (playercount)", "playercount"
+    if metric == "units":
+        if "metric_daily_units" not in event_df.columns:
+            raise SystemExit(
+                "ERROR: Required metric column 'metric_daily_units' not found. "
+                "Provide units in the event dataset."
+            )
+        return "metric_daily_units", "units", "units"
+    if metric == "revenue":
+        if "metric_daily_revenue" not in event_df.columns:
+            raise SystemExit(
+                "ERROR: Required metric column 'metric_daily_revenue' not found. "
+                "Provide revenue in the event dataset."
+            )
+        return "metric_daily_revenue", "revenue", "revenue"
+    raise SystemExit("ERROR: Unknown metric selection.")
 
 
 def ensure_discount_tier(df: pd.DataFrame, sales_df: pd.DataFrame | None) -> pd.DataFrame:
@@ -68,11 +90,8 @@ def ensure_discount_tier(df: pd.DataFrame, sales_df: pd.DataFrame | None) -> pd.
         df["discount_tier_bucket"] = pd.cut(pct, bins=bins, labels=labels, include_lowest=True)
         return df
     if sales_df is not None and "discount_tier_bucket" in sales_df.columns:
-        df = df.merge(sales_df[["sale_id", "discount_tier_bucket"]], on="sale_id", how="left")
-        return df
-    raise SystemExit(
-        "ERROR: Missing discount tier. Provide 'discount_tier_bucket' or 'discount_pct' in event dataset."
-    )
+        return df.merge(sales_df[["sale_id", "discount_tier_bucket"]], on="sale_id", how="left")
+    raise SystemExit("ERROR: Missing discount tier. Provide 'discount_tier_bucket' or 'discount_pct'.")
 
 
 def compute_baseline(event_df: pd.DataFrame, metric_col: str) -> pd.DataFrame:
@@ -86,48 +105,47 @@ def assign_segments(baseline: pd.Series, notes: list[str]) -> pd.Series:
     n_events = baseline.notna().sum()
     if n_events < 200:
         quantiles = [0, 1 / 3, 2 / 3, 1]
-        labels = SEGMENT_ORDER
         notes.append("Total events <200: used terciles (33/33/34).")
     else:
         quantiles = [0, 0.4, 0.8, 1]
-        labels = SEGMENT_ORDER
 
     clean = baseline.replace([np.inf, -np.inf], np.nan)
     try:
-        segments = pd.qcut(clean, q=quantiles, labels=labels, duplicates="drop")
+        segments = pd.qcut(clean, q=quantiles, labels=SEGMENT_ORDER, duplicates="drop")
     except Exception:
         pct = clean.rank(method="average", pct=True)
-        segments = pd.cut(pct, bins=quantiles, labels=labels, include_lowest=True)
+        segments = pd.cut(pct, bins=quantiles, labels=SEGMENT_ORDER, include_lowest=True)
 
     seg_counts = segments.value_counts(dropna=True)
     if seg_counts.min() < MIN_SEGMENT_N:
         notes.append("Segment count <25: widened tail to bottom 50%.")
         quantiles = [0, 0.5, 0.8, 1]
         try:
-            segments = pd.qcut(clean, q=quantiles, labels=labels, duplicates="drop")
+            segments = pd.qcut(clean, q=quantiles, labels=SEGMENT_ORDER, duplicates="drop")
         except Exception:
             pct = clean.rank(method="average", pct=True)
-            segments = pd.cut(pct, bins=quantiles, labels=labels, include_lowest=True)
+            segments = pd.cut(pct, bins=quantiles, labels=SEGMENT_ORDER, include_lowest=True)
         seg_counts = segments.value_counts(dropna=True)
         if seg_counts.min() < MIN_SEGMENT_N:
             notes.append("Insufficient sample size: at least one segment <25 even after widening tail.")
-
     return segments.astype(str)
 
 
-def collapse_tiers(df: pd.DataFrame, segment: str, notes: list[str]) -> pd.DataFrame:
-    counts = df[df["segment"] == segment]["discount_tier_bucket"].value_counts()
-    low_tiers = counts[counts < MIN_TIER_N].index.tolist()
-    if not low_tiers:
-        return df
+def collapse_tiers_for_segment(df: pd.DataFrame, segment: str, notes: list[str]) -> tuple[pd.DataFrame, list[str]]:
+    sub = df[df["segment"] == segment].copy()
+    counts = sub["discount_tier_bucket"].value_counts()
+    if counts.min() >= MIN_TIER_N:
+        return df, DISCOUNT_TIER_ORDER
+
     df = df.copy()
     df.loc[
-        (df["segment"] == segment) & (df["discount_tier_bucket"].isin(["51-75%", "76-100%"])),
+        (df["segment"] == segment)
+        & (df["discount_tier_bucket"].isin(["51-75%", "76-100%"])),
         "discount_tier_bucket",
     ] = "51%+"
-    if "51%+" not in DISCOUNT_TIER_ORDER:
-        notes.append(f"Collapsed tiers to '51%+' for segment '{segment}' due to low N (<{MIN_TIER_N}).")
-    return df
+    notes.append(f"Collapsed tiers to '51%+' for segment '{segment}' due to low N (<{MIN_TIER_N}).")
+    tier_order = ["0-10%", "11-25%", "26-50%", "51%+"]
+    return df, tier_order
 
 
 def compute_decay(event_df: pd.DataFrame, metric_col: str) -> pd.DataFrame:
@@ -159,11 +177,11 @@ def compute_peaks(event_df: pd.DataFrame, metric_col: str) -> pd.DataFrame:
     return peak_abs.merge(peak_pct, on="sale_id", how="left")
 
 
-def prep_data() -> tuple[pd.DataFrame, pd.DataFrame, str, list[str]]:
+def prep_data(metric: str) -> tuple[pd.DataFrame, pd.DataFrame, str, str, list[str]]:
     require(EVENT_WINDOW)
     event_df = pd.read_parquet(EVENT_WINDOW)
+    metric_col, metric_label, metric_tag = metric_config(metric, event_df)
 
-    metric_col, metric_name = detect_metric_column(event_df)
     sales_df = pd.read_parquet(SALES) if SALES.exists() else None
     event_df = ensure_discount_tier(event_df, sales_df)
 
@@ -183,162 +201,7 @@ def prep_data() -> tuple[pd.DataFrame, pd.DataFrame, str, list[str]]:
         .merge(decay, on="sale_id", how="left")
         .merge(peaks, on="sale_id", how="left")
     )
-
-    return event_df, event_summary, metric_name, notes
-
-
-def plot_tail_lift_curve(event_df: pd.DataFrame, metric_col: str, notes: list[str]) -> None:
-    df = event_df.copy()
-    df = df[df["segment"] == "tail"]
-    df = df[df["baseline_value"] > 0]
-
-    df["lift_pct"] = 100 * (df[metric_col] - df["baseline_value"]) / df["baseline_value"]
-    df["lift_pct"] = df["lift_pct"].replace([np.inf, -np.inf], np.nan)
-    df = df[df["lift_pct"].notna()]
-
-    df = collapse_tiers(df, "tail", notes)
-    tier_order = ["0-10%", "11-25%", "26-50%", "51%+"] if "51%+" in df["discount_tier_bucket"].unique() else DISCOUNT_TIER_ORDER
-
-    agg = df.groupby(["discount_tier_bucket", "k"], as_index=False)["lift_pct"].median()
-
-    sns.set_theme(style="whitegrid")
-    fig, ax = plt.subplots(figsize=(7, 4))
-    for tier in tier_order:
-        sub = agg[agg["discount_tier_bucket"] == tier]
-        if sub.empty:
-            continue
-        ax.plot(sub["k"], sub["lift_pct"], label=tier)
-    ax.axvline(0, color="black", linewidth=0.8)
-    ax.axhline(0, color="black", linewidth=0.6)
-    n_events = df["sale_id"].nunique()
-    ax.set_title(f"Tail: Lift Curve by Discount Tier (N={n_events})")
-    ax.set_xlabel("Days from sale start (k)")
-    ax.set_ylabel("Lift vs baseline (%)")
-    ax.set_xlim(-14, 14)
-    ax.legend(title="Discount tier", fontsize=8)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "tail_lift_curve_by_discount_tier.png", dpi=150)
-    plt.close(fig)
-
-
-def plot_tail_decay(event_summary: pd.DataFrame, notes: list[str]) -> None:
-    df = event_summary[event_summary["segment"] == "tail"].copy()
-    df = collapse_tiers(df, "tail", notes)
-    tier_order = ["0-10%", "11-25%", "26-50%", "51%+"] if "51%+" in df["discount_tier_bucket"].unique() else DISCOUNT_TIER_ORDER
-
-    sns.set_theme(style="whitegrid")
-    fig, ax = plt.subplots(figsize=(7, 4))
-    sns.boxplot(
-        data=df,
-        x="discount_tier_bucket",
-        y="decay_day",
-        order=tier_order,
-        ax=ax,
-        showfliers=False,
-    )
-    censored = df[df["decay_censored"] == True]["discount_tier_bucket"].value_counts()
-    subtitle = " | ".join([f"{k}: censored {v}" for k, v in censored.items()])
-    ax.set_title("Tail: Decay to Baseline by Discount Tier")
-    if subtitle:
-        ax.set_xlabel(subtitle)
-    else:
-        ax.set_xlabel("Discount tier")
-    ax.set_ylabel("Days to baseline")
-    ax.tick_params(axis="x", rotation=35)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "tail_decay_by_discount_tier.png", dpi=150)
-    plt.close(fig)
-
-
-def plot_segmented_lift(event_df: pd.DataFrame, metric_col: str, notes: list[str]) -> None:
-    df = event_df[event_df["baseline_value"] > 0].copy()
-    df["lift_pct"] = 100 * (df[metric_col] - df["baseline_value"]) / df["baseline_value"]
-    df["lift_pct"] = df["lift_pct"].replace([np.inf, -np.inf], np.nan)
-    df = df[df["lift_pct"].notna()]
-
-    sns.set_theme(style="whitegrid")
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
-
-    for idx, segment in enumerate(SEGMENT_ORDER):
-        sub = df[df["segment"] == segment]
-        sub = collapse_tiers(sub, segment, notes)
-        tier_order = ["0-10%", "11-25%", "26-50%", "51%+"] if "51%+" in sub["discount_tier_bucket"].unique() else DISCOUNT_TIER_ORDER
-        agg = sub.groupby(["discount_tier_bucket", "k"], as_index=False)["lift_pct"].median()
-
-        ax = axes[idx]
-        for tier in tier_order:
-            s = agg[agg["discount_tier_bucket"] == tier]
-            if s.empty:
-                continue
-            ax.plot(s["k"], s["lift_pct"], label=tier)
-        ax.axvline(0, color="black", linewidth=0.8)
-        ax.axhline(0, color="black", linewidth=0.6)
-        n_events = sub["sale_id"].nunique()
-        ax.set_title(f"{segment.capitalize()} (N={n_events})")
-        ax.set_xlabel("k")
-        if idx == 0:
-            ax.set_ylabel("Lift vs baseline (%)")
-        ax.set_xlim(-14, 14)
-
-    axes[-1].legend(title="Discount tier", fontsize=8)
-    fig.suptitle("Lift Curve by Discount Tier (Tail vs Mid vs Head)", y=1.02)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "lift_curve_by_discount_tier_segmented.png", dpi=150)
-    plt.close(fig)
-
-
-def plot_tail_absolute_uplift(event_summary: pd.DataFrame, metric_name: str, notes: list[str]) -> str:
-    df = event_summary[event_summary["segment"] == "tail"].copy()
-    df = collapse_tiers(df, "tail", notes)
-    tier_order = ["0-10%", "11-25%", "26-50%", "51%+"] if "51%+" in df["discount_tier_bucket"].unique() else DISCOUNT_TIER_ORDER
-
-    sns.set_theme(style="whitegrid")
-    fig, ax = plt.subplots(figsize=(7, 4))
-    sns.boxplot(
-        data=df,
-        x="discount_tier_bucket",
-        y="peak_abs_uplift",
-        order=tier_order,
-        ax=ax,
-        showfliers=False,
-    )
-    ax.axhline(0, color="black", linewidth=0.6)
-    ax.set_title("Tail: Peak Absolute Uplift by Discount Tier")
-    ax.set_xlabel("Discount tier")
-    ylabel = "Peak absolute uplift (units)" if metric_name == "units" else "Peak absolute uplift (revenue)"
-    ax.set_ylabel(ylabel)
-    ax.tick_params(axis="x", rotation=35)
-    fig.tight_layout()
-
-    filename = (
-        "tail_absolute_uplift_by_tier.png"
-        if metric_name == "units"
-        else "tail_absolute_uplift_revenue_by_tier.png"
-    )
-    fig.savefig(FIG_DIR / filename, dpi=150)
-    plt.close(fig)
-    return filename
-
-
-def write_summary(event_summary: pd.DataFrame, metric_name: str) -> pd.DataFrame:
-    summary = (
-        event_summary.groupby(["segment", "discount_tier_bucket"], as_index=False)
-        .agg(
-            n_events=("sale_id", "nunique"),
-            median_baseline_value=("baseline_value", "median"),
-            median_peak_lift_pct=("peak_lift_pct", "median"),
-            median_peak_abs_uplift=("peak_abs_uplift", "median"),
-            median_decay_day=("decay_day", "median"),
-            censored_rate=("decay_censored", "mean"),
-        )
-    )
-    summary = summary.rename(columns={"median_peak_abs_uplift": "median_peak_abs_uplift_units"})
-    if metric_name != "units":
-        summary = summary.rename(columns={"median_peak_abs_uplift_units": "median_peak_abs_uplift_revenue"})
-    summary = summary.sort_values(["segment", "discount_tier_bucket"])
-    out = REPORTS_DIR / "tail_validation_summary.csv"
-    summary.to_csv(out, index=False)
-    return summary
+    return event_df, event_summary, metric_col, metric_label, notes
 
 
 def preperiod_bias_check(event_df: pd.DataFrame, metric_col: str) -> list[str]:
@@ -352,15 +215,164 @@ def preperiod_bias_check(event_df: pd.DataFrame, metric_col: str) -> list[str]:
         return warnings
     med = df.groupby(["segment", "discount_tier_bucket"])["lift_pct"].median()
     flagged = med[med.abs() > 5]
-    for idx, val in flagged.items():
-        segment, tier = idx
+    for (segment, tier), val in flagged.items():
         warnings.append(f"Pre-period median lift not near 0 for {segment}/{tier}: {val:.1f}%")
     return warnings
 
 
-def write_notes(summary: pd.DataFrame | None, metric_name: str | None, notes: list[str], warnings: list[str], baseline_zero_count: int) -> None:
-    out = REPORTS_DIR / "tail_validation_notes.md"
-    lines = []
+def plot_tail_lift_curve(event_df: pd.DataFrame, metric_col: str, metric_label: str, metric_tag: str, notes: list[str]) -> None:
+    df = event_df[(event_df["segment"] == "tail") & (event_df["baseline_value"] > 0)].copy()
+    df["lift_pct"] = 100 * (df[metric_col] - df["baseline_value"]) / df["baseline_value"]
+    df["lift_pct"] = df["lift_pct"].replace([np.inf, -np.inf], np.nan)
+    df = df[df["lift_pct"].notna()]
+
+    df, tier_order = collapse_tiers_for_segment(df, "tail", notes)
+    agg = df.groupby(["discount_tier_bucket", "k"], as_index=False)["lift_pct"].median()
+
+    sns.set_theme(style="whitegrid")
+    fig, ax = plt.subplots(figsize=(7, 4))
+    for tier in tier_order:
+        sub = agg[agg["discount_tier_bucket"] == tier]
+        if not sub.empty:
+            ax.plot(sub["k"], sub["lift_pct"], label=tier)
+    ax.axvline(0, color="black", linewidth=0.8)
+    ax.axhline(0, color="black", linewidth=0.6)
+    n_events = df["sale_id"].nunique()
+    title = f"Tail: Lift Curve by Discount Tier (N={n_events})"
+    if metric_tag == "playercount":
+        title += " — engagement proxy (playercount)"
+    ax.set_title(title)
+    ax.set_xlabel("Days from sale start (k)")
+    ax.set_ylabel("Lift vs baseline (%)")
+    ax.set_xlim(-14, 14)
+    ax.legend(title="Discount tier", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / f"tail_lift_curve_{metric_tag}.png", dpi=150)
+    plt.close(fig)
+
+
+def plot_tail_decay(event_summary: pd.DataFrame, metric_tag: str, notes: list[str]) -> None:
+    df = event_summary[event_summary["segment"] == "tail"].copy()
+    df, tier_order = collapse_tiers_for_segment(df, "tail", notes)
+
+    sns.set_theme(style="whitegrid")
+    fig, ax = plt.subplots(figsize=(7, 4))
+    sns.boxplot(
+        data=df,
+        x="discount_tier_bucket",
+        y="decay_day",
+        order=tier_order,
+        ax=ax,
+        showfliers=False,
+    )
+    censored = df[df["decay_censored"] == True]["discount_tier_bucket"].value_counts()
+    subtitle = " | ".join([f"{k}: censored {v}" for k, v in censored.items()])
+    title = "Tail: Decay to Baseline by Discount Tier"
+    if metric_tag == "playercount":
+        title += " — engagement proxy (playercount)"
+    ax.set_title(title)
+    ax.set_xlabel(subtitle if subtitle else "Discount tier")
+    ax.set_ylabel("Days to baseline")
+    ax.tick_params(axis="x", rotation=35)
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / f"tail_decay_by_tier_{metric_tag}.png", dpi=150)
+    plt.close(fig)
+
+
+def plot_segmented_lift(event_df: pd.DataFrame, metric_col: str, metric_tag: str, notes: list[str]) -> None:
+    df = event_df[event_df["baseline_value"] > 0].copy()
+    df["lift_pct"] = 100 * (df[metric_col] - df["baseline_value"]) / df["baseline_value"]
+    df["lift_pct"] = df["lift_pct"].replace([np.inf, -np.inf], np.nan)
+    df = df[df["lift_pct"].notna()]
+
+    sns.set_theme(style="whitegrid")
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
+
+    for idx, segment in enumerate(SEGMENT_ORDER):
+        sub = df[df["segment"] == segment].copy()
+        sub, tier_order = collapse_tiers_for_segment(sub, segment, notes)
+        agg = sub.groupby(["discount_tier_bucket", "k"], as_index=False)["lift_pct"].median()
+
+        ax = axes[idx]
+        for tier in tier_order:
+            s = agg[agg["discount_tier_bucket"] == tier]
+            if not s.empty:
+                ax.plot(s["k"], s["lift_pct"], label=tier)
+        ax.axvline(0, color="black", linewidth=0.8)
+        ax.axhline(0, color="black", linewidth=0.6)
+        n_events = sub["sale_id"].nunique()
+        ax.set_title(f"{segment.capitalize()} (N={n_events})")
+        ax.set_xlabel("k")
+        if idx == 0:
+            ax.set_ylabel("Lift vs baseline (%)")
+        ax.set_xlim(-14, 14)
+
+    axes[-1].legend(title="Discount tier", fontsize=8)
+    title = "Lift Curve by Discount Tier (Tail vs Mid vs Head)"
+    if metric_tag == "playercount":
+        title += " — engagement proxy (playercount)"
+    fig.suptitle(title, y=1.02)
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / f"lift_curve_by_discount_tier_segmented_{metric_tag}.png", dpi=150)
+    plt.close(fig)
+
+
+def plot_tail_absolute_uplift(event_summary: pd.DataFrame, metric_label: str, metric_tag: str, notes: list[str]) -> None:
+    df = event_summary[event_summary["segment"] == "tail"].copy()
+    df, tier_order = collapse_tiers_for_segment(df, "tail", notes)
+
+    sns.set_theme(style="whitegrid")
+    fig, ax = plt.subplots(figsize=(7, 4))
+    sns.boxplot(
+        data=df,
+        x="discount_tier_bucket",
+        y="peak_abs_uplift",
+        order=tier_order,
+        ax=ax,
+        showfliers=False,
+    )
+    ax.axhline(0, color="black", linewidth=0.6)
+    title = "Tail: Peak Absolute Uplift by Discount Tier"
+    if metric_tag == "playercount":
+        title += " — engagement proxy (playercount)"
+    ax.set_title(title)
+    ax.set_xlabel("Discount tier")
+    ax.set_ylabel(f"Peak absolute uplift ({metric_label})")
+    ax.tick_params(axis="x", rotation=35)
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / f"tail_absolute_uplift_by_tier_{metric_tag}.png", dpi=150)
+    plt.close(fig)
+
+
+def write_summary(event_summary: pd.DataFrame, metric_tag: str) -> pd.DataFrame:
+    summary = (
+        event_summary.groupby(["segment", "discount_tier_bucket"], as_index=False)
+        .agg(
+            n_events=("sale_id", "nunique"),
+            median_baseline_value=("baseline_value", "median"),
+            median_peak_lift_pct=("peak_lift_pct", "median"),
+            median_peak_abs_uplift=("peak_abs_uplift", "median"),
+            median_decay_day=("decay_day", "median"),
+            censored_rate=("decay_censored", "mean"),
+        )
+    )
+    summary = summary.rename(columns={"median_peak_abs_uplift": f"median_peak_abs_uplift_{metric_tag}"})
+    summary = summary.sort_values(["segment", "discount_tier_bucket"])
+    out = REPORTS_DIR / f"tail_validation_summary_{metric_tag}.csv"
+    summary.to_csv(out, index=False)
+    return summary
+
+
+def write_notes(
+    summary: pd.DataFrame | None,
+    metric_tag: str,
+    metric_label: str,
+    notes: list[str],
+    warnings: list[str],
+    baseline_zero_count: int,
+) -> None:
+    out = REPORTS_DIR / f"tail_validation_notes_{metric_tag}.md"
+    lines: list[str] = []
     lines.append("# Tail Validation Notes")
     lines.append("")
     lines.append("## Definitions used")
@@ -373,49 +385,70 @@ def write_notes(summary: pd.DataFrame | None, metric_name: str | None, notes: li
     if summary is None:
         lines.append("- No summary generated (missing required metric).")
     else:
-        lines.append(f"- Total events in summary: {int(summary['n_events'].sum())}")
+        total_events = int(summary["n_events"].sum())
+        lines.append(f"- Total events in summary: {total_events}")
+        for seg in SEGMENT_ORDER:
+            seg_n = int(summary[summary["segment"] == seg]["n_events"].sum())
+            lines.append(f"- {seg}: {seg_n}")
     lines.append("")
     lines.append("## Key findings")
-    lines.append("- Not generated (missing required metric).")
+    if summary is None or summary.empty:
+        lines.append("- Not generated (missing required metric).")
+    else:
+        tail = summary[summary["segment"] == "tail"].copy()
+        if not tail.empty:
+            top_lift = tail.sort_values("median_peak_lift_pct", ascending=False).head(1)
+            if not top_lift["median_peak_lift_pct"].isna().all():
+                tier = top_lift["discount_tier_bucket"].iloc[0]
+                val = top_lift["median_peak_lift_pct"].iloc[0]
+                lines.append(f"- Tail: highest median peak lift is {val:.1f}% at tier {tier}.")
+            uplift_col = f"median_peak_abs_uplift_{metric_tag}"
+            if uplift_col in tail.columns:
+                top_abs = tail.sort_values(uplift_col, ascending=False).head(1)
+                tier = top_abs["discount_tier_bucket"].iloc[0]
+                val = top_abs[uplift_col].iloc[0]
+                lines.append(f"- Tail: highest median peak absolute uplift is {val:.2f} ({metric_label}) at tier {tier}.")
+        if metric_tag == "playercount":
+            lines.append("- All findings are engagement proxy signals (playercount), not sales outcomes.")
     lines.append("")
     lines.append("## Caveats")
-    lines.append(f"- baseline_value == 0 events: {baseline_zero_count} (excluded from % lift; included for absolute uplift when possible).")
+    lines.append(
+        f"- baseline_value == 0 events: {baseline_zero_count} (excluded from % lift; included for absolute uplift where possible)."
+    )
     for n in notes:
         lines.append(f"- {n}")
     for w in warnings:
         lines.append(f"- {w}")
+    if metric_tag == "playercount":
+        lines.append("- This mode uses engagement proxy (playercount) and does not imply revenue or ROI outcomes.")
     out.write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> None:
+    args = parse_args()
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
     try:
-        event_df, event_summary, metric_name, notes = prep_data()
+        event_df, event_summary, metric_col, metric_label, notes = prep_data(args.metric)
     except SystemExit as e:
-        # Write notes with the error for buyer-safe reporting
-        write_notes(None, None, [str(e)], [], baseline_zero_count=0)
+        write_notes(None, args.metric, args.metric, [str(e)], [], baseline_zero_count=0)
         raise
 
-    metric_col = "metric_daily_units" if metric_name == "units" else "metric_daily_revenue"
-
-    baseline_zero_count = int((event_summary["baseline_zero"] == True).sum())
     warnings = preperiod_bias_check(event_df, metric_col)
+    baseline_zero_count = int((event_summary["baseline_zero"] == True).sum())
 
-    plot_tail_lift_curve(event_df, metric_col, notes)
-    plot_tail_decay(event_summary, notes)
-    plot_segmented_lift(event_df, metric_col, notes)
-    uplifts_filename = plot_tail_absolute_uplift(event_summary, metric_name, notes)
+    plot_tail_lift_curve(event_df, metric_col, metric_label, args.metric, notes)
+    plot_tail_decay(event_summary, args.metric, notes)
+    plot_segmented_lift(event_df, metric_col, args.metric, notes)
+    plot_tail_absolute_uplift(event_summary, metric_label, args.metric, notes)
 
-    summary = write_summary(event_summary, metric_name)
-    write_notes(summary, metric_name, notes, warnings, baseline_zero_count)
+    summary = write_summary(event_summary, args.metric)
+    write_notes(summary, args.metric, metric_label, notes, warnings, baseline_zero_count)
 
     print("Saved figures to reports/figures/")
-    print(f"Saved summary table to reports/tail_validation_summary.csv")
-    print(f"Saved notes to reports/tail_validation_notes.md")
-    if metric_name != "units":
-        print(f"Absolute uplift plot written as {uplifts_filename}")
+    print(f"Saved summary table to reports/tail_validation_summary_{args.metric}.csv")
+    print(f"Saved notes to reports/tail_validation_notes_{args.metric}.md")
 
 
 if __name__ == "__main__":
