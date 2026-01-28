@@ -19,6 +19,10 @@ function Test-AllowedPath {
     $p = $Path -replace "\\", "/"
     $allowedExact = @(
         "README.md",
+        "scripts/build_readme_assets.py",
+        "assets/lift_decay.png",
+        "assets/lift_curve_by_discount_tier.png",
+        "assets/decay_by_discount_tier.png",
         "examples/worked_example.md",
         "client_preview_onepager.md",
         "decision_memo.md",
