@@ -24,6 +24,8 @@ function Test-AllowedPath {
         "assets/lift_decay.png",
         "assets/lift_curve_by_discount_tier.png",
         "assets/decay_by_discount_tier.png",
+        "reports/tail_validation_summary.csv",
+        "reports/tail_validation_notes.md",
         "examples/worked_example.md",
         "client_preview_onepager.md",
         "decision_memo.md",
