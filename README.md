@@ -27,6 +27,13 @@ This Decision Pack turns “Should we do 20% or 40%?” into a clear, written pl
 - A reusable **playbook** you can follow for future sale windows (not a one-off opinion)
 - Optional upgrade: **ROI/profit view** (requires your Steamworks exports)
 
+**What happens without this kind of analysis:**
+- You pick discounts based on gut feel (or Twitter), then can’t explain *why* it worked or failed
+- You over-discount and slowly teach your audience to wait for sales (hurts future launches/updates)
+- You under-discount and miss your best visibility windows with a “meh” offer
+- You run sales that clash with updates/fests, leaving money and momentum on the table
+- You misread the Day 1 spike as “success” and don’t notice the post-sale drop-off until it’s too late
+
 ## What this is
 I help Steam devs pick discount depth, timing, and duration using lift/decay patterns from historical sale episodes. The framework: goal → discount depth → timing → duration → next step.
 
