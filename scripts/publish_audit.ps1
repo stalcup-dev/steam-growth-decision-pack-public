@@ -19,6 +19,7 @@ function Test-AllowedPath {
     $p = $Path -replace "\\", "/"
     $allowedExact = @(
         "README.md",
+        "examples/worked_example.md",
         "client_preview_onepager.md",
         "decision_memo.md",
         "playbook_table_public.csv",

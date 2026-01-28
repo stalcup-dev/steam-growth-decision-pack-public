@@ -29,11 +29,13 @@ Make your next Steam discount a defensible decision: depth, timing, duration, an
 - **ROI Upgrade (typically ~3–4 weeks after exports):** net revenue/profit sizing by depth/region/frequency (requires Steamworks exports).
 
 ## Worked Example
-**Situation:** Live game, planning the next seasonal sale; debating 20% vs 40% while preparing an update 2 weeks later.
-**Decision:** Recommend a mid discount for the sale window (protects price integrity), then use the update as the next conversion beat.
-**Schedule:** Sale → cooldown/measure → update → next promo window with a pre-committed decision rule (not vibes).
-**Expected outcome (hypothesis):** lift during the window with less post-sale decay than deeper discounts; baseline shift measured over 14–30 days.
-**Risks:** public signals are an engagement proxy (not revenue); competitor pricing and update delays can change the result.
+**Situation:** Live indie at $14.99 with ~8k–15k wishlists; major update on 2026-03-12; recent promo means cooldown eligibility must be confirmed.
+**Decision:** 20-30% for 5-7 days, timed 7-14 days before the beat (assuming Steam cooldown eligibility).
+**Schedule:** Prep → promo window → cooldown/measure → update (kept clean) → checkpoint for the next window.
+**Expected outcome (hypothesis):** meaningful conversion bump with less post-sale decay than deeper discounts; evaluate over 14-30 days.
+**Risks:** mis-timing vs cooldown/build readiness; public signals are an engagement proxy (not revenue).
+
+Full case study: [Synthetic worked example](./examples/worked_example.md).
 
 ## Pricing tiers
 - **Mini:** fast, decision-focused (48-hour turnaround).
