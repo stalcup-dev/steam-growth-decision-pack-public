@@ -133,10 +133,14 @@ def parse_data_used(data_text: str) -> Tuple[List[str], List[str]]:
     return public, steam
 
 
+DECISION_WIDTH = 720
+CALENDAR_WIDTH = 720
+
+
 def render_decision_summary(decision_text: str, risks_text: str, situation_text: str, data_text: str) -> None:
-    title_font = load_font(36, bold=True)
-    header_font = load_font(26, bold=True)
-    body_font = load_font(22, bold=False)
+    title_font = load_font(30, bold=True)
+    header_font = load_font(22, bold=True)
+    body_font = load_font(20, bold=False)
 
     lines = [ln.strip() for ln in decision_text.splitlines() if ln.strip()]
     goal_line = next((ln for ln in lines if ln.startswith("**Goal:**") or ln.startswith("Goal:")), "")
@@ -151,7 +155,7 @@ def render_decision_summary(decision_text: str, risks_text: str, situation_text:
         clean = re.sub(r"Mitigation:\s*", "Mitigation: ", clean)
         risk_pairs.append(clean)
 
-    width = 1400
+    width = DECISION_WIDTH
     margin = 60
     line_gap = 8
 
@@ -211,9 +215,9 @@ def render_decision_summary(decision_text: str, risks_text: str, situation_text:
 
 
 def render_calendar_table(text: str) -> None:
-    title_font = load_font(32, bold=True)
-    header_font = load_font(22, bold=True)
-    body_font = load_font(20, bold=False)
+    title_font = load_font(26, bold=True)
+    header_font = load_font(20, bold=True)
+    body_font = load_font(18, bold=False)
 
     lines = [ln.strip() for ln in text.splitlines() if ln.strip().startswith("|")]
     rows = [[c.strip() for c in ln.strip("|").split("|")] for ln in lines]
@@ -223,10 +227,18 @@ def render_calendar_table(text: str) -> None:
     header = rows[0]
     data_rows = rows[2:] if rows[1][0].startswith("---") else rows[1:]
 
-    col_widths = [240, 230, 200, 230, 520]
+    # Drop "Offer" column for readability in preview (keep Window/Action/Goal/Measure)
+    keep_idx = [0, 1, 3, 4]
+    header = [header[i] for i in keep_idx]
+    data_rows = [[row[i] for i in keep_idx] for row in data_rows]
+
+    # Limit to first 4 rows for mobile readability
+    data_rows = data_rows[:4]
+
+    col_widths = [150, 170, 170, 230]
     table_width = sum(col_widths)
-    margin = 60
-    width = table_width + margin * 2
+    margin = 40
+    width = max(CALENDAR_WIDTH, table_width + margin * 2)
 
     tmp = Image.new("RGB", (width, 1000), "white")
     draw = ImageDraw.Draw(tmp)
@@ -252,7 +264,7 @@ def render_calendar_table(text: str) -> None:
     draw = ImageDraw.Draw(img)
 
     y = margin
-    draw.text((margin, y), "90-Day Promo Calendar (Starter — Preview, redacted)", font=title_font, fill="black")
+    draw.text((margin, y), "90-Day Promo Calendar (Preview — redacted)", font=title_font, fill="black")
     y += title_height + 20
 
     x = margin
