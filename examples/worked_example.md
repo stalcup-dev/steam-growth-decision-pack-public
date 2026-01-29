@@ -1,4 +1,4 @@
-# Worked Example (Synthetic Indie Case)
+# Worked Example (Synthetic Indie Case — Public Preview)
 
 This is a realistic but synthetic case study. No proprietary or real game data is used.
 
@@ -7,33 +7,29 @@ This is a realistic but synthetic case study. No proprietary or real game data i
 - **Genre/shape:** Single-player indie (1–2h sessions), update-driven spikes
 - **Current price:** $14.99 USD
 - **Wishlist range:** ~8k–15k total wishlists (Steamworks-reported; not public)
-- **Upcoming beat date:** 2026-03-12 (planned “major update”)
+- **Upcoming beat date:** Planned “major update” (exact date in paid pack)
 - **Constraints / cooldowns (assumed):**
-  - A discount ran recently, so another promo must wait for Steam discount cooldown eligibility (confirm exact dates in Steamworks).
+  - A discount ran recently, so the next promo must wait for Steam cooldown eligibility (confirm exact dates in Steamworks).
   - Avoid stacking a discount too close to the update if you want clean measurement of update vs discount lift.
   - Keep a minimum cooldown between promos to avoid training “wait for sale” behavior.
 
-## Decision
+## Decision (Public Preview — redacted)
 **Goal:** Convert wishlists and re-activate lapsed interest without damaging price integrity.
 
-- **Recommended discount band:** **20–30%**
-- **Timing window:** **7–14 days before the beat date**, assuming cooldown eligibility (so players who notice the update can still convert during/after).
-- **Duration guidance:** **5–7 days**
-  - Long enough to capture weekend traffic + a couple weekdays.
-  - Short enough to limit post-sale decay and protect future pricing flexibility.
+- **Recommended discount band:** **Moderate tier (exact band in paid pack)**
+- **Timing window:** **Ahead of the beat**, after cooldown eligibility (exact window in paid pack).
+- **Duration guidance:** **Short window** sized to capture a weekend + 1–2 weekdays (exact duration in paid pack).
 
-## Schedule (90-day promo calendar starter)
+## Schedule (90-day promo calendar starter — redacted)
 Use this as a starter calendar; adjust once you confirm cooldown eligibility and your build readiness.
 
-| Window (date range) | Action | Offer | Primary goal | What to measure |
+| Window (relative) | Action | Offer | Primary goal | What to measure |
 | --- | --- | --- | --- | --- |
-| 2026-02-10 → 2026-02-23 | No discount; prep update | None | Build demand | Wishlist adds, follower adds, review velocity |
-| 2026-02-24 → 2026-03-02 | Promo window | 20–30% for 5–7 days | Convert wishlists | Store traffic, conversion rate (Steamworks), units |
-| 2026-03-03 → 2026-03-11 | Cooldown / measurement | None | Isolate effect | Baseline playercount, refund rate (Steamworks), review delta |
-| 2026-03-12 → 2026-03-18 | Beat: major update | No discount (preferred) | Reactivation | DAU/CCU, review velocity, wishlist adds |
-| 2026-03-19 → 2026-04-02 | Follow-through | None | Sustain interest | Retention proxy (playtime), store page CTR, wishlist-to-purchase lag |
-| 2026-04-03 → 2026-04-15 | Decision checkpoint | Decide next promo | Avoid randoming | Compare post-window decay vs expectations |
-| 2026-04-16 → 2026-05-10 | Optional second window | Small (10–20%) or none | Keep price clean | Same metrics; watch frequency creep |
+| Week 0–1 | No discount; prep update | None | Build demand | Wishlist adds, follower adds, review velocity |
+| Week 2 | Promo window | Moderate tier (exact band in paid pack) | Convert wishlists | Store traffic, conversion rate (Steamworks), units |
+| Week 3 | Cooldown / measurement | None | Isolate effect | Baseline playercount, refund rate (Steamworks), review delta |
+| Week 4 | Beat: major update | None | Reactivation | DAU/CCU, review velocity, wishlist adds |
+| Week 5–8 | Follow-through + checkpoint | Light tier (optional) | Sustain interest | Retention proxy (playtime), store page CTR, wishlist-to-purchase lag |
 
 ## Expected outcome (directional, not guaranteed)
 **What you should expect (hypothesis):**
@@ -47,10 +43,10 @@ Use this as a starter calendar; adjust once you confirm cooldown eligibility and
 
 ## Risks + mitigations
 - **Risk: Under-discounting (offer feels “meh”).**  
-  Mitigation: tighten timing (closer to peak interest) and keep duration short; only deepen discount if prior windows show weak conversion at 20–30%.
+  Mitigation: tighten timing (closer to peak interest) and use a pre-defined trigger for deepening the offer.
 
 - **Risk: Over-discounting (training wait-for-sale).**  
-  Mitigation: cap depth (start 20–30%), space promos, and use the update as a non-discount conversion beat.
+  Mitigation: cap depth, space promos, and use the update as a non-discount conversion beat.
 
 - **Risk: Cooldown eligibility mismatch.**  
   Mitigation: confirm eligibility dates in Steamworks first; if blocked, shift the promo earlier and keep the update clean.

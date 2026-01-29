@@ -96,12 +96,49 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, m
     return lines
 
 
-def render_decision_summary(text: str, risks_text: str) -> None:
+def parse_constraints(situation_text: str) -> List[str]:
+    lines = situation_text.splitlines()
+    constraints: List[str] = []
+    capture = False
+    for line in lines:
+        if "Constraints / cooldowns" in line:
+            capture = True
+            continue
+        if capture:
+            if line.strip().startswith("-"):
+                constraints.append(strip_md(line.strip().lstrip("- ").strip()))
+            elif line.strip().startswith("##"):
+                break
+    return constraints
+
+
+def parse_data_used(data_text: str) -> Tuple[List[str], List[str]]:
+    public: List[str] = []
+    steam: List[str] = []
+    current = None
+    for line in data_text.splitlines():
+        line = line.strip()
+        if line.startswith("**Public signals"):
+            current = "public"
+            continue
+        if line.startswith("**Steamworks exports required"):
+            current = "steam"
+            continue
+        if line.startswith("-"):
+            item = strip_md(line.lstrip("- ").strip())
+            if current == "public":
+                public.append(item)
+            elif current == "steam":
+                steam.append(item)
+    return public, steam
+
+
+def render_decision_summary(decision_text: str, risks_text: str, situation_text: str, data_text: str) -> None:
     title_font = load_font(36, bold=True)
     header_font = load_font(26, bold=True)
     body_font = load_font(22, bold=False)
 
-    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    lines = [ln.strip() for ln in decision_text.splitlines() if ln.strip()]
     goal_line = next((ln for ln in lines if ln.startswith("**Goal:**") or ln.startswith("Goal:")), "")
     bullets = [ln for ln in lines if ln.startswith("-")]
     bullets = [strip_md(ln.lstrip("- ").strip()) for ln in bullets]
@@ -122,7 +159,7 @@ def render_decision_summary(text: str, risks_text: str) -> None:
     draw = ImageDraw.Draw(tmp_img)
 
     content: List[Tuple[str, ImageFont.ImageFont]] = []
-    content.append(("Decision Summary (Synthetic Example)", title_font))
+    content.append(("Decision Summary (Preview — redacted)", title_font))
     content.append(("", body_font))
     if goal_line:
         content.append((strip_md(goal_line), body_font))
@@ -131,9 +168,21 @@ def render_decision_summary(text: str, risks_text: str) -> None:
     for b in bullets:
         content.append((f"• {b}", body_font))
     content.append(("", body_font))
+    content.append(("Why / constraints", header_font))
+    constraints = parse_constraints(situation_text)[:3]
+    for c in constraints:
+        content.append((f"• {c}", body_font))
+    content.append(("", body_font))
     content.append(("Risks + mitigations", header_font))
     for r in risk_pairs:
         content.append((f"• {r}", body_font))
+    content.append(("", body_font))
+    content.append(("Data needed", header_font))
+    public, steam = parse_data_used(data_text)
+    if public:
+        content.append((f"• Public: {public[0]}", body_font))
+    if steam:
+        content.append((f"• Steamworks: {steam[0]}", body_font))
 
     wrapped_lines: List[Tuple[str, ImageFont.ImageFont]] = []
     for text_line, font in content:
@@ -203,7 +252,7 @@ def render_calendar_table(text: str) -> None:
     draw = ImageDraw.Draw(img)
 
     y = margin
-    draw.text((margin, y), "90-Day Promo Calendar (Starter)", font=title_font, fill="black")
+    draw.text((margin, y), "90-Day Promo Calendar (Starter — Preview, redacted)", font=title_font, fill="black")
     y += title_height + 20
 
     x = margin
@@ -233,9 +282,13 @@ def render_calendar_table(text: str) -> None:
 
 def main() -> None:
     text = read_text(SOURCE_MD)
-    decision = extract_section(text, "Decision")
+    decision = extract_section(text, "Decision (Public Preview — redacted)")
     risks = extract_section(text, "Risks + mitigations")
-    schedule = extract_section(text, "Schedule (90-day promo calendar starter)")
+    situation = extract_section(text, "Situation")
+    data_used = extract_section(text, "Data used (public vs Steamworks-required)")
+    schedule = extract_section(text, "Schedule (90-day promo calendar starter — redacted)")
+    if not schedule:
+        schedule = extract_section(text, "Schedule (90-day promo calendar starter)")
 
     if not decision:
         raise SystemExit("Decision section not found in worked_example.md")
@@ -243,7 +296,7 @@ def main() -> None:
         raise SystemExit("Schedule section not found in worked_example.md")
 
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
-    render_decision_summary(decision, risks)
+    render_decision_summary(decision, risks, situation, data_used)
     render_calendar_table(schedule)
     print(f"Rendered {DECISION_OUT.relative_to(REPO_ROOT)}")
     print(f"Rendered {CALENDAR_OUT.relative_to(REPO_ROOT)}")
