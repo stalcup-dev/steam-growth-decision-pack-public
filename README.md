@@ -35,7 +35,7 @@ Make your next Steam discount a defensible decision: depth, timing, duration, an
 **Expected outcome (hypothesis):** meaningful conversion bump with less post-sale decay than deeper discounts; evaluate over 14-30 days.
 **Risks:** mis-timing vs cooldown/build readiness; public signals are an engagement proxy (not revenue).
 
-Public benchmarks use playercount as an engagement proxy; sales outcomes require Steamworks exports.
+Public benchmarks use playercount as an engagement proxy. For sales outcomes (units/revenue) I run the same analysis on your Steamworks exports and deliver a 1-page decision memo + 90-day calendar.
 
 ![Tail benchmark (engagement proxy)](assets/tail_proxy_key.png)
 
@@ -58,6 +58,9 @@ Full case study: [Synthetic worked example](./examples/worked_example.md).
 
 **What can you infer without Steamworks exports?**
 - Public data supports engagement hypotheses (playercount + price/discount history). It cannot directly compute revenue/profit.
+
+**Do you use sales data or Steamworks exports?**
+- Public benchmarks use playercount as an engagement proxy. For sales outcomes (units/revenue) I run the same analysis on your Steamworks exports and deliver a 1-page decision memo + 90-day calendar.
 
 **What changes with the ROI Upgrade?**
 - With Steamworks exports (units/revenue/refunds), we can quantify net impact by discount depth/region/frequency instead of treating lift as a proxy.
