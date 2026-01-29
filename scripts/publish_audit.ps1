@@ -24,6 +24,7 @@ function Test-AllowedPath {
         "assets/lift_decay.png",
         "assets/lift_curve_by_discount_tier.png",
         "assets/decay_by_discount_tier.png",
+        "assets/tail_proxy_key.png",
         "reports/tail_validation_summary.csv",
         "reports/tail_validation_notes.md",
         "reports/tail_validation_summary_playercount.csv",

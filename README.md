@@ -35,6 +35,10 @@ Make your next Steam discount a defensible decision: depth, timing, duration, an
 **Expected outcome (hypothesis):** meaningful conversion bump with less post-sale decay than deeper discounts; evaluate over 14-30 days.
 **Risks:** mis-timing vs cooldown/build readiness; public signals are an engagement proxy (not revenue).
 
+Public benchmarks use playercount as an engagement proxy; sales outcomes require Steamworks exports.
+
+![Tail benchmark (engagement proxy)](assets/tail_proxy_key.png)
+
 Full case study: [Synthetic worked example](./examples/worked_example.md).
 
 ## Pricing tiers
