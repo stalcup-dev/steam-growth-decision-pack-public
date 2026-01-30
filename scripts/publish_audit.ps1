@@ -71,6 +71,23 @@ $allowedGlobs = @(
     return $false
 }
 
+function Test-ForbiddenPath {
+    param([string]$Path)
+    $p = $Path -replace "\\", "/"
+    $forbiddenGlobs = @(
+        "client_private/*",
+        "client_private/**",
+        "*/upwork_gallery/*",
+        "*/upwork_gallery/**",
+        "**/upwork_*preview*.png",
+        "**/upwork_preview_pack.pdf"
+    )
+    foreach ($g in $forbiddenGlobs) {
+        if ($p -like $g) { return $true }
+    }
+    return $false
+}
+
 Write-Host "Publish Audit (ALLOWLIST MODE) - scanning tracked + staged files..."
 
 $tracked = Get-GitPaths -GitArgs @("ls-files")
@@ -84,11 +101,24 @@ if ($all.Count -eq 0) {
 }
 
 $blocked = @()
+$forbidden = @()
 
 foreach ($f in $all) {
+    if (Test-ForbiddenPath -Path $f) {
+        $forbidden += $f
+    }
     if (-not (Test-AllowedPath -Path $f)) {
         $blocked += $f
     }
+}
+
+if ($forbidden.Count -gt 0) {
+    Write-Host ""
+    Write-Host "Publish Audit FAILED - forbidden private preview files detected:"
+    $forbidden | ForEach-Object { Write-Host "  - $_" }
+    Write-Host ""
+    Write-Host "Fix: remove/unstage private Upwork preview files."
+    exit 1
 }
 
 if ($blocked.Count -gt 0) {
@@ -98,6 +128,16 @@ if ($blocked.Count -gt 0) {
     Write-Host ""
     Write-Host "Fix: unstage/remove these files, or explicitly add to allowlist if truly public-safe."
     exit 1
+}
+
+if (Test-Path "README.md") {
+    $readme = Get-Content "README.md" -Raw
+    if ($readme -match "upwork_gallery" -or $readme -match "client_private") {
+        Write-Host ""
+        Write-Host "Publish Audit FAILED - README references private preview paths."
+        Write-Host "Fix: remove private path references from README."
+        exit 1
+    }
 }
 
 Write-Host "Publish Audit PASSED - all files are allowlisted."
