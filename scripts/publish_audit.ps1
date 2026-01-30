@@ -21,6 +21,7 @@ function Test-AllowedPath {
         "README.md",
         "scripts/build_readme_assets.py",
         "scripts/build_tail_validation.py",
+        "scripts/render_upwork_gallery.py",
         "assets/lift_decay.png",
         "assets/lift_curve_by_discount_tier.png",
         "assets/decay_by_discount_tier.png",
